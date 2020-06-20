@@ -3,15 +3,15 @@
  * Any copyright is dedicated to the public domain. See LICENSE.md for more details.
  */
 
-#ifndef CONVACK_COORDINATE
-#define CONVACK_COORDINATE
+#ifndef CONVACK_AREA
+#define CONVACK_AREA
 
 namespace convack {
 
 /*!
- * Type to use to denote coordinates in space.
+ * Type to use to denote two-dimensional areas.
  */
-typedef float coordinate_t;
+typedef float area_t;
 
 }
 
