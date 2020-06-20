@@ -35,6 +35,11 @@ public:
 	 */
 	ConvexPolygon(const std::vector<Point2>& vertices);
 
+	/*!
+	 * Get the vertices of the convex hull.
+	 */
+	const std::vector<Point2>& get_vertices() const;
+
 private:
 	/*!
 	 * The implementation of the convex polygon is separated into this class.

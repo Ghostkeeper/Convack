@@ -15,8 +15,18 @@ public:
 	 * The coordinates of the convex polygon.
 	 */
 	std::vector<Point2> vertices;
+
+	/*! @copydoc ConvexPolygon::get_vertices() const
+	 */
+	const std::vector<Point2>& get_vertices() const {
+		return vertices;
+	}
 };
 
 ConvexPolygon::ConvexPolygon(const std::vector<Point2>& vertices) : pimpl(new Impl(vertices)) {}
+
+const std::vector<Point2>& ConvexPolygon::get_vertices() const {
+	return pimpl->get_vertices();
+}
 
 }
