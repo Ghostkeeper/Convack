@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 #Where to find the source code.
 set(convack_sources
+	convex_polygon.cpp
 	point2.cpp
 	scene.cpp
 )
