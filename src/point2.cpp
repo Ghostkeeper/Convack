@@ -13,4 +13,8 @@ bool Point2::operator ==(const Point2& other) const {
 	return x == other.x && y == other.y;
 }
 
+bool Point2::operator !=(const Point2& other) const {
+	return !(*this == other);
+}
+
 }

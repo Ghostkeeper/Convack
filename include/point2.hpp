@@ -37,8 +37,18 @@ struct Point2 {
 	/*!
 	 * Compares if two points denote the same position in 2D space.
 	 * \param other The 2D point to compare to.
+	 * \return Whether the two points are the same (`true`) or different
+	 * (`false`).
 	 */
 	bool operator ==(const Point2& other) const;
+
+	/*!
+	 * Compares if two points denote different positions in 2D space.
+	 * \param other The 2D point to compare to.
+	 * \return Whether the two points are different (`true`) or the same
+	 * (`false`).
+	 */
+	bool operator !=(const Point2& other) const;
 };
 
 }
