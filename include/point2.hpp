@@ -18,13 +18,6 @@ namespace convack {
  */
 struct Point2 {
 	/*!
-	 * Constructs a new 2D point located at the given coordinates.
-	 * \param x The coordinate of this point on the X axis.
-	 * \param y The coordinate of this point on the Y axis.
-	 */
-	Point2(const coordinate_t x, const coordinate_t y);
-
-	/*!
 	 * The coordinate of this point on the X axis.
 	 */
 	coordinate_t x;
@@ -33,6 +26,19 @@ struct Point2 {
 	 * The coordinate of this point on the Y axis.
 	 */
 	coordinate_t y;
+
+	/*!
+	 * Constructs a new 2D point located at the given coordinates.
+	 * \param x The coordinate of this point on the X axis.
+	 * \param y The coordinate of this point on the Y axis.
+	 */
+	Point2(const coordinate_t x, const coordinate_t y);
+
+	/*!
+	 * Compares if two points denote the same position in 2D space.
+	 * \param other The 2D point to compare to.
+	 */
+	bool operator ==(const Point2& other) const;
 };
 
 }
