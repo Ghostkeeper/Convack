@@ -27,6 +27,8 @@ public:
 
 ConvexPolygon::ConvexPolygon(const std::vector<Point2>& vertices) : pimpl(new Impl(vertices)) {}
 
+ConvexPolygon::~ConvexPolygon() = default; //Defined here where there is a complete type for Impl, so that the unique_ptr can be deleted.
+
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 	return pimpl->get_vertices();
 }

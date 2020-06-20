@@ -38,6 +38,11 @@ public:
 	ConvexPolygon(const std::vector<Point2>& vertices);
 
 	/*!
+	 * Deletes the convex polygon.
+	 */
+	~ConvexPolygon();
+
+	/*!
 	 * Get the vertices of the convex hull.
 	 */
 	const std::vector<Point2>& get_vertices() const;
