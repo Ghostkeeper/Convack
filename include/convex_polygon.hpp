@@ -38,6 +38,12 @@ public:
 	ConvexPolygon(const std::vector<Point2>& vertices);
 
 	/*!
+	 * Copies a convex polygon.
+	 * \param original The original convex polygon to copy.
+	 */
+	ConvexPolygon(const ConvexPolygon& original);
+
+	/*!
 	 * Deletes the convex polygon.
 	 */
 	~ConvexPolygon();
