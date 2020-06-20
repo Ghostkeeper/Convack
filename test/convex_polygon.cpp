@@ -18,4 +18,13 @@ TEST(ConvexPolygon, ConstructEmpty) {
 	EXPECT_EQ(poly.get_vertices().size(), 0) << "There were no vertices in the input.";
 }
 
+/*!
+ * Tests constructing a convex polygon with a basic set of vertices.
+ */
+TEST(ConvexPolygon, Construct) {
+	std::vector<Point2> vertices = {Point2(10.1, 20.2), Point2(-40.4, 30.3), Point2(0, 20.2)};
+	const ConvexPolygon poly(vertices);
+	EXPECT_EQ(poly.get_vertices(), vertices) << "The vertices in the convex polygon must be the same as the input.";
+}
+
 }
