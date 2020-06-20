@@ -1,5 +1,7 @@
-//Library to pack convex polygons into arbitrary shapes.
-//Any copyright is dedicated to the public domain. See LICENSE.md for more details.
+/*
+ * Library to pack convex polygons into arbitrary shapes.
+ * Any copyright is dedicated to the public domain. See LICENSE.md for more details.
+ */
 
 #ifndef CONVACK_CONVEX_POLYGON
 #define CONVACK_CONVEX_POLYGON
