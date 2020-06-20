@@ -9,3 +9,19 @@ set(CONVACK_VERSION_MINOR 0 CACHE STRING "Minor release version. This must be in
 set(CONVACK_VERSION_PATCH 0 CACHE STRING "Patch release version. This must be incremented for every release where there are no changes to the API.")
 
 project(convack VERSION ${CONVACK_VERSION_MAJOR}.${CONVACK_VERSION_MINOR}.${CONVACK_VERSION_PATCH} DESCRIPTION "Library to pack convex polygons into arbitrary shapes.")
+
+#Compiler requirements.
+set(CMAKE_CXX_STANDARD 11)
+
+#Where to find the source code.
+set(convack_sources
+	scene.cpp
+)
+set(convack_source_paths "")
+foreach(f IN LISTS convack_sources)
+	list(APPEND convack_source_paths "${CMAKE_CURRENT_SOURCE_DIR}/src/${f}")
+endforeach()
+
+#The main target.
+add_library(convack SHARED ${convack_source_paths})
+target_include_directories(convack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

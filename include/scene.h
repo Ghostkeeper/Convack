@@ -3,6 +3,9 @@
 
 #ifndef CONVACK_SCENE
 #define CONVACK_SCENE
+
+#include <memory> //For unique_ptr.
+
 namespace convack {
 
 /*!
@@ -22,7 +25,36 @@ namespace convack {
  * in this scene.
  */
 class Scene {
-}
+public:
+	/*!
+	 * Constructs an empty scene.
+	 *
+	 * The scene has no enclosed space or obstructions, and no polygons are
+	 * packed into the scene yet.
+	 */
+	Scene();
+
+private:
+	/*!
+	 * The implementation of the scene is separated into this class.
+	 *
+	 * This implements the PIMPL idiom.
+	 *
+	 * This allows consumers of this library to use newer versions of Convack
+	 * than what they compiled their application for. They can install bug fixes
+	 * without recompiling their application, even if the data stored in the
+	 * implementation changes. Only for backwards compatibility changes will
+	 * they need to recompile their application.
+	 */
+	class Impl;
+
+	/*!
+	 * A pointer to the implementation of this class.
+	 *
+	 * This implements the PIMPL idiom.
+	 */
+	std::unique_ptr<Impl> pimpl;
+};
 
 }
 #endif
