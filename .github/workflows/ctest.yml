@@ -1,0 +1,19 @@
+#Library to pack convex polygons into arbitrary shapes.
+#Any copyright is dedicated to the public domain. See LICENSE.md for more details.
+
+#Github action that performs the automated tests on every change and pull request using CMake.
+name: Automated Tests
+on: [push, pull_request]
+
+jobs:
+  ctest: #Performs the CMake tests.
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: CMake
+      run: cmake . -DBUILD_TESTS=ON -DUSE_SYSTEM_GOOGLETEST=OFF -DBUILD_GOOGLETEST=ON
+    - name: Make
+      run: make
+    - name: CTest
+      run: make test
