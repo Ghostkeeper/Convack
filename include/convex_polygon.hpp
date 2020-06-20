@@ -28,6 +28,17 @@ namespace convack {
 class ConvexPolygon {
 public:
 	/*!
+	 * Constructs a convex hull around a number of points.
+	 *
+	 * You could provide the vertices of a concave polygon in any order, or just
+	 * any set of loose points. The result is the same: A convex polygon that
+	 * includes all of the given points.
+	 * \param points The points to construct a convex hull around.
+	 * \return A convex polygon around the given points.
+	 */
+	static ConvexPolygon convex_hull(const std::vector<Point2>& points);
+
+	/*!
 	 * Constructs a new convex polygon using the provided vertices.
 	 *
 	 * The input vertices are assumed to be already convex and in the correct
