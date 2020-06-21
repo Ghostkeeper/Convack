@@ -53,6 +53,10 @@ public:
 		return false; //No match with any rotation.
 	}
 
+	bool operator !=(const ConvexPolygon& other) const {
+		return !(*this == other);
+	}
+
 	/*! @copydoc ConvexPolygon::get_vertices() const
 	 */
 	const std::vector<Point2>& get_vertices() const {
@@ -111,6 +115,10 @@ ConvexPolygon::~ConvexPolygon() = default; //Defined here where there is a compl
 
 bool ConvexPolygon::operator ==(const ConvexPolygon& other) const {
 	return *pimpl == other;
+}
+
+bool ConvexPolygon::operator !=(const ConvexPolygon& other) const {
+	return *pimpl != other;
 }
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {

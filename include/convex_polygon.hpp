@@ -68,8 +68,26 @@ public:
 	 * This equality check is regardless of the rotation of the vertices in the
 	 * vertex list. Two convex polygons are equal even if their loops of
 	 * vertices start with a different vertex.
+	 * \param other The convex polygon to compare to.
+	 * \return `true` if the two convex polygons are equal, or `false` if they
+	 * are different.
 	 */
 	bool operator ==(const ConvexPolygon& other) const;
+
+	/*!
+	 * Compares two convex polygons for whether they cover a different area.
+	 *
+	 * Both convex polygons are assumed to be convex and minimal (as in, they
+	 * don't have any colinear vertices).
+	 *
+	 * This equality check is regardless of the rotation of the vertices in the
+	 * vertex list. Two convex polygons are equal even if their loops of
+	 * vertices start with a different vertex.
+	 * \param other The convex polygon to compare to.
+	 * \return `true` if the two convex polygons are different, or `false` if
+	 * they are equal.
+	 */
+	bool operator !=(const ConvexPolygon& other) const;
 
 	/*!
 	 * Get the vertices of the convex hull.
