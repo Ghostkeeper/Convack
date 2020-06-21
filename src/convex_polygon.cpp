@@ -12,6 +12,11 @@ namespace convack {
 
 class ConvexPolygon::Impl {
 public:
+	/*!
+	 * The coordinates of the convex polygon.
+	 */
+	std::vector<Point2> vertices;
+
 	/*! @copydoc ConvexPolygon::convex_hull(const std::vector<Point2>&)
 	 */
 	static ConvexPolygon convex_hull(const std::vector<Point2>& points) {
@@ -22,10 +27,28 @@ public:
 	 */
 	Impl(const std::vector<Point2>& vertices) : vertices(vertices) {} //Copy the input vertices into this class.
 
-	/*!
-	 * The coordinates of the convex polygon.
+	/*! @copydoc ConvexPolygon::operator ==(const ConvexPolygon& other) const
 	 */
-	std::vector<Point2> vertices;
+	bool operator ==(const ConvexPolygon& other) const {
+		const std::vector<Point2>& other_vertices = other.get_vertices();
+		if(vertices.size() != other_vertices.size()) {
+			return false; //Early out for performance. This is easy to check.
+		}
+
+		for(size_t offset = 0; offset < vertices.size(); ++offset) { //Try with any rotation of the vertices.
+			bool match = true;
+			for(size_t i = 0; i < vertices.size(); ++i) {
+				if(vertices[i] != other_vertices[(i + offset) % vertices.size()]) {
+					match = false;
+					break;
+				}
+			}
+			if(match) {
+				return true;
+			}
+		}
+		return false; //No match with any rotation.
+	}
 
 	/*! @copydoc ConvexPolygon::get_vertices() const
 	 */
@@ -82,6 +105,10 @@ ConvexPolygon::ConvexPolygon(const std::vector<Point2>& vertices) : pimpl(new Im
 ConvexPolygon::ConvexPolygon(const ConvexPolygon& original) : pimpl(new Impl(*original.pimpl)) {}
 
 ConvexPolygon::~ConvexPolygon() = default; //Defined here where there is a complete type for Impl, so that the unique_ptr can be deleted.
+
+bool ConvexPolygon::operator ==(const ConvexPolygon& other) const {
+	return *pimpl == other;
+}
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 	return pimpl->get_vertices();
