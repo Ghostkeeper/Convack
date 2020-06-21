@@ -296,4 +296,13 @@ TEST(ConvexPolygon, ContainsEmpty) {
 	EXPECT_FALSE(empty.contains(Point2(42, 69))) << "An empty convex polygon never contains anything.";
 }
 
+/*!
+ * Tests that a convex polygon with a single vertex never contains any points.
+ */
+TEST(ConvexPolygon, ContainsSingleVertex) {
+	const ConvexPolygon single({Point2(100, 200)});
+	EXPECT_FALSE(single.contains(Point2(50, 100))) << "Different location, so definitely outside of the convex polygon.";
+	EXPECT_FALSE(single.contains(Point2(100, 200))) << "Even though this location is the same as the one vertex of the polygon, it's still just on the border so it's not considered inside.";
+}
+
 }
