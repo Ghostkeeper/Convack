@@ -190,4 +190,21 @@ TEST_F(ConvexPolygonFixture, ConvexHullStar) {
 	EXPECT_EQ(result, ground_truth) << "Four vertices were concave and should have been left out. Only the tips of the star are left.";
 }
 
+/*!
+ * Tests getting the convex hull around a triangle that is in reverse order.
+ *
+ * Reverse order means that the triangle represents a hole. The convex hull must
+ * be a positive shape, so this effectively reverses the winding order of the
+ * polygon.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullTriangleReversed) {
+	const std::vector<Point2> inverse_triangle = {
+		triangle[0],
+		triangle[2], //Swapping vertices 1 and 2 results in a negative shape.
+		triangle[1]
+	};
+	const ConvexPolygon result = ConvexPolygon::convex_hull(inverse_triangle);
+	EXPECT_EQ(result, triangle) << "Taking the convex hull must always result in a positive shape.";
+}
+
 }
