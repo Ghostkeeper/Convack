@@ -8,6 +8,7 @@
 
 #include <ostream> //To be able to serialise a point to a stream.
 
+#include "area.hpp" //The result of some calculations on the point.
 #include "coordinate.hpp" //To store the coordinates of this point.
 
 namespace convack {
@@ -65,6 +66,18 @@ struct Point2 {
 	 * stream directly, giving you a reasonably readable output.
 	 */
 	friend std::ostream& operator <<(std::ostream& output_stream, const Point2& point);
+
+	/*!
+	 * Calculate the squared magnitude of this point when seen as a vector from
+	 * the 0,0 coordinate.
+	 *
+	 * The squared magnitude is much faster to compute than the actual magnitude
+	 * since there is no division or square root involved. It is useful when
+	 * comparing the magnitude of multiple vertices, since the square root is
+	 * monotonic. If the squared magnitude is bigger, then the actual magnitude
+	 * is also bigger.
+	 */
+	area_t magnitude2() const;
 };
 
 }
