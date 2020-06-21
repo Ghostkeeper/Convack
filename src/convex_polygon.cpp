@@ -4,6 +4,8 @@
  */
 
 #include <algorithm> //For min_element.
+#include <iostream> //DEBUG!
+
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
 
@@ -94,26 +96,32 @@ private:
 		Point2 last = *std::min_element(points.begin(), points.end(), [](const Point2& a, const Point2& b) {
 			return a.x < b.x; //Select vertex most to negative X as starting point for the loop. The leftmost point is always in the convex hull.
 		});
-		Point2 current = Point2(last.x + 1, last.y); //So that the first cross product is not degenerate.
 
 		do {
 			result.push_back(last);
 
-			Point2 best = points[0]; //Find the next vertex with the lowest determinant (most towards the right).
-			area_t best_determinant; //Determinant of the best vertex to add next.
-			for(Point2 next : points) {
-				if(next == last || next == current) {
-					continue; //Don't immediately go back (degenerate polygon) and don't re-add the same vertex.
+			//Find the right-most vertex.
+			//Here we take two points: The best candidate so far, and any new vertex to consider.
+			//The new vertex is better than the best candidate if it's to the right of the line from the last convex hull vertex to the previous best.
+
+			//Start off with a candidate that is NOT equal to the best (many vertices may be overlapping, so loop until we've found one).
+			Point2 best = last;
+			for(Point2 candidate : points) {
+				if(candidate != last) {
+					best = candidate;
+					break;
 				}
-				const area_t determinant = (static_cast<area_t>(current.x) - last.x) * (next.y - last.y) - (current.y - last.y) * (next.x - last.x);
-				if(determinant <= best_determinant) {
+			}
+			
+			//Now update the `best` vertex if we find a new vertex that is to the right of the line from `last` to `best`.
+			for(Point2 next : points) {
+				const area_t determinant = (static_cast<area_t>(best.x) - last.x) * (next.y - last.y) - (best.y - last.y) * (next.x - last.x);
+				if(determinant < 0) {
 					best = next;
-					best_determinant = determinant;
 				}
 			}
 
-			last = current;
-			current = best;
+			last = best;
 		} while(last != result[0]); //Repeat until we automatically close the loop.
 
 		return result;
