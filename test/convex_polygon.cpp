@@ -106,6 +106,26 @@ TEST_F(ConvexPolygonFixture, EqualityDifferentSize) {
 }
 
 /*!
+ * Tests equality when two polygons are the same except their rotation.
+ */
+TEST_F(ConvexPolygonFixture, EqualityRotation) {
+	const ConvexPolygon a(star);
+	std::vector<Point2> rotated_star = {
+		star[3],
+		star[4],
+		star[5],
+		star[6],
+		star[7],
+		star[0],
+		star[1],
+		star[2]
+	};
+	const ConvexPolygon b(rotated_star);
+
+	EXPECT_EQ(a, b) << "The two convex polygons cover the same area, even though the loop starts in a different spot along the contour.";
+}
+
+/*!
  * Tests getting the convex hull of an empty set of vertices.
  */
 TEST(ConvexPolygon, ConvexHullEmpty) {
