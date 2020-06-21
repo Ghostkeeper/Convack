@@ -76,6 +76,16 @@ TEST_F(ConvexPolygonFixture, ConstructCopy) {
 }
 
 /*!
+ * Test equality of two empty convex polygons.
+ */
+TEST(ConvexPolygon, EqualityEmpty) {
+	const ConvexPolygon a({});
+	const ConvexPolygon b({});
+
+	EXPECT_EQ(a, b) << "The two convex polygons are both empty, and thus equal.";
+}
+
+/*!
  * Tests getting the convex hull of an empty set of vertices.
  */
 TEST(ConvexPolygon, ConvexHullEmpty) {
