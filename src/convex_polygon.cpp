@@ -118,6 +118,10 @@ private:
 				const area_t determinant = (static_cast<area_t>(best.x) - last.x) * (next.y - last.y) - (best.y - last.y) * (next.x - last.x);
 				if(determinant < 0) {
 					best = next;
+				} else if(determinant == 0) { //Vertices are colinear.
+					if((next - last).magnitude2() > (best - last).magnitude2()) { //Choose the vertex that is furthest away. Skip over vertices that are in between, to get a more efficient convex hull.
+						best = next;
+					}
 				}
 			}
 
