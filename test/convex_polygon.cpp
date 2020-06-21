@@ -164,4 +164,13 @@ TEST(ConvexPolygon, ConvexHullLine) {
 	EXPECT_EQ(result, ConvexPolygon(line)) << "With only two input vertices, the result must encompass both of these vertices and is just as degenerate.";
 }
 
+/*!
+ * Tests getting the convex hull around a triangle, which is already convex.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullTriangle) {
+	const ConvexPolygon result = ConvexPolygon::convex_hull(triangle);
+
+	EXPECT_EQ(result, ConvexPolygon(triangle)) << "The triangle was already convex, so it must remain unchanged.";
+}
+
 }
