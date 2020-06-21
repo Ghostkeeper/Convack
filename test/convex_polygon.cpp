@@ -161,7 +161,7 @@ TEST(ConvexPolygon, ConvexHullLine) {
 	const std::vector<Point2> line = {Point2(10.0, 10.0), Point2(20.0, 20.0)};
 	const ConvexPolygon result = ConvexPolygon::convex_hull(line);
 
-	EXPECT_EQ(result.get_vertices(), line) << "With only two input vertices, the result must encompass both of these vertices and is just as degenerate.";
+	EXPECT_EQ(result, ConvexPolygon(line)) << "With only two input vertices, the result must encompass both of these vertices and is just as degenerate.";
 }
 
 }
