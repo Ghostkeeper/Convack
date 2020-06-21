@@ -53,6 +53,12 @@ struct Point2 {
 	bool operator !=(const Point2& other) const;
 
 	/*!
+	 * Subtracts the coordinates of one point from those of another
+	 * element-wise.
+	 */
+	Point2 operator -(const Point2& other) const;
+
+	/*!
 	 * Overloads streaming this point.
 	 *
 	 * This is useful for debugging, since it allows printing the point to a

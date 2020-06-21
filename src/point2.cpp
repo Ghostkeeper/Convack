@@ -17,6 +17,10 @@ bool Point2::operator !=(const Point2& other) const {
 	return !(*this == other);
 }
 
+Point2 Point2::operator -(const Point2& other) const {
+	return Point2(x - other.x, y - other.y);
+}
+
 std::ostream& operator <<(std::ostream& output_stream, const Point2& point) {
 	return output_stream << "(" << point.x << "," << point.y << ")";
 }
