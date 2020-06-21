@@ -85,4 +85,14 @@ TEST_F(ConvexPolygonFixture, ConvexHullEmpty) {
 	EXPECT_TRUE(result.get_vertices().empty()) << "With no input vertices, the convex hull is just as degenerate.";
 }
 
+/*!
+ * Tests getting the convex hull of a single vertex.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullSingle) {
+	const std::vector<Point2> single = {Point2(10.0, 10.0)};
+	const ConvexPolygon result = ConvexPolygon::convex_hull(single);
+
+	EXPECT_EQ(result.get_vertices(), single) << "With just one input vertex, the convex hull contains just the one vertex and is just as degenerate.";
+}
+
 }
