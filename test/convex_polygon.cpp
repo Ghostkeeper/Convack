@@ -106,11 +106,21 @@ TEST_F(ConvexPolygonFixture, EqualityDifferentSize) {
 }
 
 /*!
+ * Tests that two convex polygons are different if they cover different areas.
+ */
+TEST_F(ConvexPolygonFixture, EqualityDifferentArea) {
+	const ConvexPolygon a(triangle);
+	const ConvexPolygon b({Point2(3, 0), Point2(4, 0), Point2(3.5, 10)}); //A completely different triangle.
+
+	EXPECT_NE(a, b) << "The two convex polygons cover a different area, so they are not equal.";
+}
+
+/*!
  * Tests equality when two polygons are the same except their rotation.
  */
 TEST_F(ConvexPolygonFixture, EqualityRotation) {
 	const ConvexPolygon a(star);
-	std::vector<Point2> rotated_star = {
+	const ConvexPolygon b({
 		star[3],
 		star[4],
 		star[5],
@@ -119,8 +129,7 @@ TEST_F(ConvexPolygonFixture, EqualityRotation) {
 		star[0],
 		star[1],
 		star[2]
-	};
-	const ConvexPolygon b(rotated_star);
+	});
 
 	EXPECT_EQ(a, b) << "The two convex polygons cover the same area, even though the loop starts in a different spot along the contour.";
 }
