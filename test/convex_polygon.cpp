@@ -96,6 +96,16 @@ TEST_F(ConvexPolygonFixture, EqualityEqual) {
 }
 
 /*!
+ * Test equality when the vertex data has different sizes.
+ */
+TEST_F(ConvexPolygonFixture, EqualityDifferentSize) {
+	const ConvexPolygon a(triangle); //3 vertices.
+	const ConvexPolygon b(star); //8 vertices.
+
+	EXPECT_NE(a, b) << "The two convex polygons have different numbers of vertices, so they are not equal.";
+}
+
+/*!
  * Tests getting the convex hull of an empty set of vertices.
  */
 TEST(ConvexPolygon, ConvexHullEmpty) {
