@@ -98,6 +98,17 @@ public:
 	friend std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon);
 
 	/*!
+	 * Tests whether the given point is contained in this convex polygon.
+	 *
+	 * Points that are exactly on the edge are not considered to be inside the
+	 * convex polygon.
+	 * \param point The point to test.
+	 * \return `true` if that point is inside the polygon, or `false` if it
+	 * isn't or on the boundary.
+	 */
+	bool contains(const Point2& point) const;
+
+	/*!
 	 * Get the vertices of the convex hull.
 	 */
 	const std::vector<Point2>& get_vertices() const;

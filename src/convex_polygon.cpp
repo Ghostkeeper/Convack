@@ -75,6 +75,22 @@ public:
 		return output_stream << "]";
 	}
 
+	/*! @copydoc ConvexPolygon::contains(point) const
+	 */
+	bool contains(const Point2& point) const {
+		if(vertices.size() < 3) {
+			return false; //Even if it's on the one vertex or one edge, it's still not considered inside.
+		}
+
+		//For each edge, check if the point is left of that edge. If it's not left for any of them, the point is outside.
+		for(size_t i = 0; i < vertices.size(); ++i) {
+			if(is_left(vertices[i], vertices[(i + 1) % vertices.size()], point) <= 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/*! @copydoc ConvexPolygon::get_vertices() const
 	 */
 	const std::vector<Point2>& get_vertices() const {
@@ -165,6 +181,10 @@ bool ConvexPolygon::operator !=(const ConvexPolygon& other) const {
 
 std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon) {
 	return output_stream << *convex_polygon.pimpl;
+}
+
+bool ConvexPolygon::contains(const Point2& point) const {
+	return pimpl->contains(point);
 }
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {
