@@ -86,6 +86,16 @@ TEST(ConvexPolygon, EqualityEmpty) {
 }
 
 /*!
+ * Test equality when the vertex data is exactly the same.
+ */
+TEST_F(ConvexPolygonFixture, EqualityEqual) {
+	const ConvexPolygon a(triangle);
+	const ConvexPolygon b(triangle);
+
+	EXPECT_EQ(a, b) << "The two convex polygons contain the same vertex data.";
+}
+
+/*!
  * Tests getting the convex hull of an empty set of vertices.
  */
 TEST(ConvexPolygon, ConvexHullEmpty) {
