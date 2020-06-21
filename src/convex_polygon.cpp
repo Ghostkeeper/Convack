@@ -4,7 +4,7 @@
  */
 
 #include <algorithm> //For min_element.
-
+#include <iostream> //DEBUG!
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
 
@@ -33,6 +33,9 @@ public:
 		const std::vector<Point2>& other_vertices = other.get_vertices();
 		if(vertices.size() != other_vertices.size()) {
 			return false; //Early out for performance. This is easy to check.
+		}
+		if(vertices.empty()) { //Both have size 0, and are thus equal.
+			return true;
 		}
 
 		for(size_t offset = 0; offset < vertices.size(); ++offset) { //Try with any rotation of the vertices.
