@@ -249,4 +249,26 @@ TEST_F(ConvexPolygonFixture, ConvexHullColinearBackwardOrder) {
 	EXPECT_EQ(result, ground_truth);
 }
 
+/*!
+ * Tests taking the convex hull of a shape with many colinear line segments.
+ *
+ * All of the colinear points must've been filtered out. The convex hull must be
+ * as efficient as possible.
+ *
+ * This is a fuzz test. It'll randomise the list of vertices before taking the
+ * convex hull, many times. The random number generator is seeded, so the test
+ * is still deterministic. This should catch most cases of bugs in the colinear
+ * case.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullColinearRandomOrder) {
+	constexpr int num_shuffle = 1000; //How often to repeat the test with random order. Increase to catch more cases, but slower tests.
+	std::default_random_engine randomiser{42}; //Use a fixed seed so the tests are deterministic.
+	for(size_t i = 0; i < num_shuffle; ++i) {
+		std::shuffle(colinear.begin(), colinear.end(), randomiser); //Use a fixed seed so the tests are deterministic.
+		const ConvexPolygon result = ConvexPolygon::convex_hull(colinear);
+		const ConvexPolygon ground_truth({Point2(0.0, 0.0), Point2(1.1 * 99, 2.2 * 99)});
+		EXPECT_EQ(result, ground_truth);
+	}
+}
+
 }

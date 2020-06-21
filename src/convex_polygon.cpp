@@ -4,7 +4,6 @@
  */
 
 #include <algorithm> //For min_element.
-#include <iostream> //DEBUG!
 
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
