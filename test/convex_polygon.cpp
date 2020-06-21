@@ -75,4 +75,14 @@ TEST_F(ConvexPolygonFixture, ConstructCopy) {
 	EXPECT_EQ(original.get_vertices(), copy.get_vertices()) << "The copy must be an exact copy.";
 }
 
+/*!
+ * Tests getting the convex hull of an empty set of vertices.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullEmpty) {
+	const std::vector<Point2> empty;
+	const ConvexPolygon result = ConvexPolygon::convex_hull(empty);
+
+	EXPECT_TRUE(result.get_vertices().empty()) << "With no input vertices, the convex hull is just as degenerate.";
+}
+
 }
