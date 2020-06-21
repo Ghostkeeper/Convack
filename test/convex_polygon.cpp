@@ -324,4 +324,12 @@ TEST_F(ConvexPolygonFixture, ContainsInside) {
 	EXPECT_TRUE(ConvexPolygon(triangle).contains(Point2(25, 10))) << "This point is completely inside the triangle.";
 }
 
+/*!
+ * Tests whether a point outside a convex polygon is correctly identified as
+ * outside.
+ */
+TEST_F(ConvexPolygonFixture, ContainsOutside) {
+	EXPECT_FALSE(ConvexPolygon(triangle).contains(Point2(100, 10))) << "This point is completely outside of the triangle.";
+}
+
 }
