@@ -234,4 +234,19 @@ TEST_F(ConvexPolygonFixture, ConvexHullColinearForwardOrder) {
 	EXPECT_EQ(result, ground_truth);
 }
 
+/*!
+ * Tests taking the convex hull of a shape with many colinear line segments.
+ *
+ * All of the colinear points must've been filtered out. The convex hull must be
+ * as efficient as possible.
+ *
+ * This tests the edge case where the vertices are all in reverse order.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullColinearBackwardOrder) {
+	std::reverse(colinear.begin(), colinear.end());
+	const ConvexPolygon result = ConvexPolygon::convex_hull(colinear);
+	const ConvexPolygon ground_truth({Point2(0.0, 0.0), Point2(1.1 * 99, 2.2 * 99)});
+	EXPECT_EQ(result, ground_truth);
+}
+
 }
