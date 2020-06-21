@@ -271,4 +271,21 @@ TEST_F(ConvexPolygonFixture, ConvexHullColinearRandomOrder) {
 	}
 }
 
+/*!
+ * Tests taking the convex hull of a shape where all points overlay one another.
+ *
+ * Kind of an extreme edge case.
+ */
+TEST(ConvexPolygon, ConvexHullSinglePoint) {
+	std::vector<Point2> single_point;
+	for(size_t i = 0; i < 10; ++i) {
+		single_point.emplace_back(42, 69);
+	}
+
+	const ConvexPolygon result = ConvexPolygon::convex_hull(single_point);
+
+	ASSERT_EQ(result.get_vertices().size(), 1) << "All of the extraneous points collapse to 1.";
+	EXPECT_EQ(result.get_vertices()[0], Point2(42, 69)) << "The coordinates for all of the points were this. That must be retained.";
+}
+
 }
