@@ -53,9 +53,9 @@ public:
  * Test constructing a convex polygon from a predefined set of vertices.
  */
 TEST(ConvexPolygon, ConstructEmpty) {
-	std::vector<Point2> vertices = {};
-	const ConvexPolygon poly(vertices);
-	EXPECT_EQ(poly.get_vertices().size(), 0) << "There were no vertices in the input.";
+	const std::vector<Point2> empty;
+	const ConvexPolygon poly(empty);
+	EXPECT_TRUE(poly.get_vertices().empty()) << "There were no vertices in the input.";
 }
 
 /*!
