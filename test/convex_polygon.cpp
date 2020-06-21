@@ -332,4 +332,15 @@ TEST_F(ConvexPolygonFixture, ContainsOutside) {
 	EXPECT_FALSE(ConvexPolygon(triangle).contains(Point2(100, 10))) << "This point is completely outside of the triangle.";
 }
 
+/*!
+ * Tests whether a point on the border of a convex polygon is correctly
+ * identified as outside.
+ */
+TEST_F(ConvexPolygonFixture, ContainsEdge) {
+	const ConvexPolygon polygon(triangle);
+	EXPECT_FALSE(polygon.contains(Point2(30, 0))) << "This point is on the lower border of the triangle, and the border is considered outside.";
+	EXPECT_FALSE(polygon.contains(Point2(50, 0))) << "This point is on one of the vertices of the triangle, and the border is considered outside.";
+	EXPECT_FALSE(polygon.contains(Point2(80, 0))) << "This point is aligned with the line through one of the edges, but is actually completely outside of the triangle.";
+}
+
 }
