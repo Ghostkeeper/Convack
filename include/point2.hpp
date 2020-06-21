@@ -6,6 +6,8 @@
 #ifndef CONVACK_POINT2
 #define CONVACK_POINT2
 
+#include <ostream> //To be able to serialise a point to a stream.
+
 #include "coordinate.hpp" //To store the coordinates of this point.
 
 namespace convack {
@@ -49,6 +51,14 @@ struct Point2 {
 	 * (`false`).
 	 */
 	bool operator !=(const Point2& other) const;
+
+	/*!
+	 * Overloads streaming this point.
+	 *
+	 * This is useful for debugging, since it allows printing the point to a
+	 * stream directly, giving you a reasonably readable output.
+	 */
+	friend std::ostream& operator <<(std::ostream& output_stream, const Point2& point);
 };
 
 }

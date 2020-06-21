@@ -4,7 +4,6 @@
  */
 
 #include <algorithm> //For min_element.
-#include <iostream> //DEBUG!
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
 
@@ -27,7 +26,7 @@ public:
 	 */
 	Impl(const std::vector<Point2>& vertices) : vertices(vertices) {} //Copy the input vertices into this class.
 
-	/*! @copydoc ConvexPolygon::operator ==(const ConvexPolygon& other) const
+	/*! @copydoc ConvexPolygon::operator ==(const ConvexPolygon&) const
 	 */
 	bool operator ==(const ConvexPolygon& other) const {
 		const std::vector<Point2>& other_vertices = other.get_vertices();
@@ -53,8 +52,26 @@ public:
 		return false; //No match with any rotation.
 	}
 
+	/*! @copydoc ConvexPolygon::operator !=(const ConvexPolygon&) const
+	 */
 	bool operator !=(const ConvexPolygon& other) const {
 		return !(*this == other);
+	}
+
+	/*! @copydoc ConvexPolygon::operator <<(std::ostream&, const ConvexPolygon&)
+	 */
+	friend std::ostream& operator <<(std::ostream& output_stream, const Impl& convex_polygon_impl) {
+		output_stream << "[";
+		for(size_t i = 0; i < convex_polygon_impl.vertices.size(); ++i) {
+			if(i != 0) {
+				output_stream << ", ";
+			}
+			if(i >= 32) { //Output at most 32 vertices, to prevent spamming the output stream for debugging purposes.
+				return output_stream << "...]";
+			}
+			output_stream << convex_polygon_impl.vertices[i];
+		}
+		return output_stream << "]";
 	}
 
 	/*! @copydoc ConvexPolygon::get_vertices() const
@@ -119,6 +136,10 @@ bool ConvexPolygon::operator ==(const ConvexPolygon& other) const {
 
 bool ConvexPolygon::operator !=(const ConvexPolygon& other) const {
 	return *pimpl != other;
+}
+
+std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon) {
+	return output_stream << *convex_polygon.pimpl;
 }
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {

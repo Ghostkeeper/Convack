@@ -90,6 +90,14 @@ public:
 	bool operator !=(const ConvexPolygon& other) const;
 
 	/*!
+	 * Overloads streaming this convex polygon.
+	 *
+	 * This is useful for debugging, since it allows printing the convex polygon
+	 * to a stream directly, giving you a reasonably readable output.
+	 */
+	friend std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon);
+
+	/*!
 	 * Get the vertices of the convex hull.
 	 */
 	const std::vector<Point2>& get_vertices() const;
