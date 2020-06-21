@@ -173,4 +173,21 @@ TEST_F(ConvexPolygonFixture, ConvexHullTriangle) {
 	EXPECT_EQ(result, ConvexPolygon(triangle)) << "The triangle was already convex, so it must remain unchanged.";
 }
 
+/*!
+ * Tests getting the convex hull around a star shape, which is concave.
+ *
+ * The convex hull should have removed the concave vertices.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullStar) {
+	const ConvexPolygon result = ConvexPolygon::convex_hull(star);
+
+	const ConvexPolygon ground_truth = ConvexPolygon({
+		Point2(100.0, 0.0),
+		Point2(0.0, 100.0),
+		Point2(-100.0, 0.0),
+		Point2(0.0, -100.0)
+	});
+	EXPECT_EQ(result, ground_truth) << "Four vertices were concave and should have been left out. Only the tips of the star are left.";
+}
+
 }
