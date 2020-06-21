@@ -114,10 +114,10 @@ private:
 			
 			//Now update the `best` vertex if we find a new vertex that is to the right of the line from `last` to `best`.
 			for(Point2 next : points) {
-				const area_t determinant = (static_cast<area_t>(best.x) - last.x) * (next.y - last.y) - (best.y - last.y) * (next.x - last.x);
-				if(determinant < 0) {
+				const area_t left = is_left(last, best, next);
+				if(left < 0) { //Is to the right.
 					best = next;
-				} else if(determinant == 0) { //Vertices are colinear.
+				} else if(left == 0) { //Vertices are colinear.
 					if((next - last).magnitude2() > (best - last).magnitude2()) { //Choose the vertex that is furthest away. Skip over vertices that are in between, to get a more efficient convex hull.
 						best = next;
 					}
@@ -128,6 +128,20 @@ private:
 		} while(last != result[0]); //Repeat until we automatically close the loop.
 
 		return result;
+	}
+
+	/*!
+	 * Tests whether the `query` point is to the left, to the right or on top of
+	 * the line through `a` and `b`.
+	 *
+	 * This is a helper function to make a number of calculations easier.
+	 *
+	 * The result is a positive number if the `query` point is to the left of
+	 * the line through `a` and `b`, a negative number if it's to the right, or
+	 * zero when it's exactly on top of that line.
+	 */
+	static area_t is_left(const Point2& a, const Point2& b, const Point2& query) {
+		return (static_cast<area_t>(b.x) - a.x) * (query.y - a.y) - (b.y - a.y) * (query.x - a.x);
 	}
 };
 
