@@ -78,7 +78,7 @@ TEST_F(ConvexPolygonFixture, ConstructCopy) {
 /*!
  * Tests getting the convex hull of an empty set of vertices.
  */
-TEST_F(ConvexPolygonFixture, ConvexHullEmpty) {
+TEST(ConvexPolygon, ConvexHullEmpty) {
 	const std::vector<Point2> empty;
 	const ConvexPolygon result = ConvexPolygon::convex_hull(empty);
 
@@ -88,11 +88,21 @@ TEST_F(ConvexPolygonFixture, ConvexHullEmpty) {
 /*!
  * Tests getting the convex hull of a single vertex.
  */
-TEST_F(ConvexPolygonFixture, ConvexHullSingle) {
+TEST(ConvexPolygon, ConvexHullSingle) {
 	const std::vector<Point2> single = {Point2(10.0, 10.0)};
 	const ConvexPolygon result = ConvexPolygon::convex_hull(single);
 
 	EXPECT_EQ(result.get_vertices(), single) << "With just one input vertex, the convex hull contains just the one vertex and is just as degenerate.";
+}
+
+/*!
+ * Tests getting the convex hull around a line.
+ */
+TEST(ConvexPolygon, ConvexHullLine) {
+	const std::vector<Point2> line = {Point2(10.0, 10.0), Point2(20.0, 20.0)};
+	const ConvexPolygon result = ConvexPolygon::convex_hull(line);
+
+	EXPECT_EQ(result.get_vertices(), line) << "With only two input vertices, the result must encompass both of these vertices and is just as degenerate.";
 }
 
 }
