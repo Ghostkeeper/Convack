@@ -3,7 +3,9 @@
  * Any copyright is dedicated to the public domain. See LICENSE.md for more details.
  */
 
+#include <algorithm> //For std::shuffle.
 #include <gtest/gtest.h> //To run the test.
+#include <random> //For fuzz testing.
 #include <vector> //To store vertices of test polygons.
 
 #include "convex_polygon.hpp" //The unit under test.
@@ -28,6 +30,11 @@ public:
 	std::vector<Point2> triangle;
 
 	/*!
+	 * 100 vertices in a long line.
+	 */
+	std::vector<Point2> colinear;
+
+	/*!
 	 * Prepare to run a test. This creates the fixture members.
 	 */
 	void SetUp() {
@@ -41,11 +48,17 @@ public:
 			Point2(0.0, -100.0),
 			Point2(20.0, -20.0)
 		});
+
 		triangle.assign({
 			Point2(0.0, 0.0),
 			Point2(50.0, 0.0),
 			Point2(25.0, 50.0)
 		});
+
+		colinear.clear();
+		for(size_t i = 0; i < 100; ++i) {
+			colinear.emplace_back(1.1 * i, 2.2 * i);
+		}
 	}
 };
 
@@ -181,7 +194,7 @@ TEST_F(ConvexPolygonFixture, ConvexHullTriangle) {
 TEST_F(ConvexPolygonFixture, ConvexHullStar) {
 	const ConvexPolygon result = ConvexPolygon::convex_hull(star);
 
-	const ConvexPolygon ground_truth = ConvexPolygon({
+	const ConvexPolygon ground_truth({
 		Point2(100.0, 0.0),
 		Point2(0.0, 100.0),
 		Point2(-100.0, 0.0),
@@ -205,6 +218,20 @@ TEST_F(ConvexPolygonFixture, ConvexHullTriangleReversed) {
 	};
 	const ConvexPolygon result = ConvexPolygon::convex_hull(inverse_triangle);
 	EXPECT_EQ(result, triangle) << "Taking the convex hull must always result in a positive shape.";
+}
+
+/*!
+ * Tests taking the convex hull of a shape with many colinear line segments.
+ *
+ * All of the colinear points must've been filtered out. The convex hull must be
+ * as efficient as possible.
+ *
+ * This tests the edge case where the vertices are all in order.
+ */
+TEST_F(ConvexPolygonFixture, ConvexHullColinearForwardOrder) {
+	const ConvexPolygon result = ConvexPolygon::convex_hull(colinear);
+	const ConvexPolygon ground_truth({Point2(0.0, 0.0), Point2(1.1 * 99, 2.2 * 99)});
+	EXPECT_EQ(result, ground_truth);
 }
 
 }
