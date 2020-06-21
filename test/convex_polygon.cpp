@@ -305,4 +305,15 @@ TEST(ConvexPolygon, ContainsSingleVertex) {
 	EXPECT_FALSE(single.contains(Point2(100, 200))) << "Even though this location is the same as the one vertex of the polygon, it's still just on the border so it's not considered inside.";
 }
 
+/*!
+ * Tests that a convex polygon with two vertices never contains any points.
+ */
+TEST(ConvexPolygon, ContainsLine) {
+	const ConvexPolygon line({Point2(0, 0), Point2(100, 200)});
+	EXPECT_FALSE(line.contains(Point2(10, 10))) << "This point is completely away from the line.";
+	EXPECT_FALSE(line.contains(Point2(50, 100))) << "Even though this point is on the line, it's still just on the border so it's not considered inside.";
+	EXPECT_FALSE(line.contains(Point2(0, 0))) << "Points on the vertices of the convex polygon are still considered outside.";
+	EXPECT_FALSE(line.contains(Point2(100, 200))) << "Points on the vertices of the convex polygon are still considered outside.";
+}
+
 }

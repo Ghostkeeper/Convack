@@ -82,6 +82,8 @@ public:
 			return false; //Even if it's on the one vertex or one edge, it's still not considered inside.
 		}
 
+		//TODO: Speed up by checking with a bounding box or reduced resolution first.
+
 		//For each edge, check if the point is left of that edge. If it's not left for any of them, the point is outside.
 		for(size_t i = 0; i < vertices.size(); ++i) {
 			if(is_left(vertices[i], vertices[(i + 1) % vertices.size()], point) <= 0) {
