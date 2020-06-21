@@ -288,4 +288,12 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
 	EXPECT_EQ(result.get_vertices()[0], Point2(42, 69)) << "The coordinates for all of the points were this. That must be retained.";
 }
 
+/*!
+ * Tests that an empty convex polygon never contains any points.
+ */
+TEST(ConvexPolygon, ContainsEmpty) {
+	const ConvexPolygon empty({});
+	EXPECT_FALSE(empty.contains(Point2(42, 69))) << "An empty convex polygon never contains anything.";
+}
+
 }
