@@ -316,4 +316,12 @@ TEST(ConvexPolygon, ContainsLine) {
 	EXPECT_FALSE(line.contains(Point2(100, 200))) << "Points on the vertices of the convex polygon are still considered outside.";
 }
 
+/*!
+ * Tests whether a point inside a convex polygon is correctly identified as
+ * inside.
+ */
+TEST_F(ConvexPolygonFixture, ContainsInside) {
+	EXPECT_TRUE(ConvexPolygon(triangle).contains(Point2(25, 10))) << "This point is completely inside the triangle.";
+}
+
 }
