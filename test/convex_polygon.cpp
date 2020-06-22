@@ -289,6 +289,15 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
 }
 
 /*!
+ * Test collision between two empty convex polygons.
+ */
+TEST(ConvexPolygon, ColliesTwoEmpty) {
+	const ConvexPolygon a({});
+	const ConvexPolygon b({});
+	EXPECT_FALSE(a.collides(b)) << "Empty convex polygons never collide with anything.";
+}
+
+/*!
  * Tests that an empty convex polygon never contains any points.
  */
 TEST(ConvexPolygon, ContainsEmpty) {
