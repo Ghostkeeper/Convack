@@ -295,6 +295,7 @@ TEST(ConvexPolygon, ColliesTwoEmpty) {
 	const ConvexPolygon a({});
 	const ConvexPolygon b({});
 	EXPECT_FALSE(a.collides(b)) << "Empty convex polygons never collide with anything.";
+	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
 }
 
 /*!
@@ -303,6 +304,20 @@ TEST(ConvexPolygon, ColliesTwoEmpty) {
 TEST_F(ConvexPolygonFixture, CollidesEmpty) {
 	const ConvexPolygon a({});
 	EXPECT_FALSE(a.collides(ConvexPolygon(triangle))) << "An empty convex polygon has no area and so doesn't collide with anything at all.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(a)) << "The inverse always gives the same result.";
+}
+
+/*!
+ * Test collision between a single vertex and a normal convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, CollidesVertex) {
+	const ConvexPolygon single_vertex_outside({Point2(1000, 1000)}); //This convex polygon has a single vertex far outside of the triangle to test against.
+	EXPECT_FALSE(single_vertex_outside.collides(ConvexPolygon(triangle))) << "The vertex is far away from the convex polygon.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(single_vertex_outside)) << "The inverse always gives the same result.";
+
+	const ConvexPolygon single_vertex_inside({Point2(25, 25)}); //A vertex inside of the triangle.
+	EXPECT_FALSE(single_vertex_inside.collides(ConvexPolygon(triangle))) << "Even though the vertex is inside the other triangle, collision of the edges and vertices doesn't count.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(single_vertex_inside)) << "The inverse always gives the same result.";
 }
 
 /*!
