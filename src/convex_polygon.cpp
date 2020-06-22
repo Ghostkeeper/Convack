@@ -75,7 +75,7 @@ public:
 		return output_stream << "]";
 	}
 
-	/*! @copydoc ConvexPolygon::contains(point) const
+	/*! @copydoc ConvexPolygon::contains(const Point2&) const
 	 */
 	bool contains(const Point2& point) const {
 		if(vertices.size() < 3) {
@@ -91,6 +91,55 @@ public:
 			}
 		}
 		return true;
+	}
+
+	/*! @copydoc ConvexPolygon::collides(const ConvexPolygon&) const
+	 * \param check_other Whether to check collision from the other side. For a
+	 * correct result, the collision check needs to happen from both sides. This
+	 * parameter determines if we've already checked from the other side or not,
+	 * to prevent going into an infinite loop of checking back and forth.
+	 */
+	bool collides(const Impl& other, const bool check_other = true) const {
+		//TODO: Speed up by checking with a bounding box or reduced resolution first.
+
+		//This uses the separating axes theorem (SAT) to find collisions between convex polygons in quadratic time.
+		//Loop over all edges to see if the two convex polygons are completely separated by that axis.
+		bool collision_this_side = true;
+		for(size_t this_edge = 0; this_edge < vertices.size(); ++this_edge) {
+			const Point2 edge_vector = vertices[(this_edge + 1) % vertices.size()] - vertices[this_edge];
+			const Point2 axis_vector(-edge_vector.y, edge_vector.x); //Rotate 90 degrees to get an axis perpendicular to this edge to project the other polygon on.
+
+			/* Because the convex hull is winding counterclockwise, this convex
+			hull will always be completely to the left of the edge (negative on
+			the projection axis). Therefore we only need to check the other
+			convex polygon to see if it's completely to the right of the
+			projection axis (weakly positive on the projection axis). If it's
+			completely right, we've found the separating axis and the two are
+			not colliding. */
+
+			bool axis_overlap = false;
+			const std::vector<Point2>& other_vertices = other.get_vertices(); //Convenience alias.
+			for(size_t other_vertex = 0; other_vertex < other_vertices.size(); ++other_vertex) {
+				const area_t projection = axis_vector.dot(other_vertices[other_vertex]);
+				if(projection < 0) {
+					axis_overlap = true;
+					break;
+				}
+			}
+			if(!axis_overlap) { //No overlap on this axis, so the two polygons don't collide.
+				collision_this_side = false;
+			}
+		}
+		if(collision_this_side) {
+			return true; //None of the edges are separating, so the other polygon must be going through this one.
+		}
+
+		//Also check from the other side.
+		if(check_other) {
+			constexpr bool check_other_again = false; //Don't check this one again after checking the other. That would result in infinite recursion.
+			return other.collides(*this, check_other_again);
+		}
+		return false; //Neither are colliding.
 	}
 
 	/*! @copydoc ConvexPolygon::get_vertices() const
@@ -163,6 +212,8 @@ private:
 	}
 };
 
+//Implementations of the parent ConvexPolygon class all refers on to the PIMPL class.
+
 ConvexPolygon ConvexPolygon::convex_hull(const std::vector<Point2>& points) {
 	return ConvexPolygon::Impl::convex_hull(points);
 }
@@ -187,6 +238,10 @@ std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& conv
 
 bool ConvexPolygon::contains(const Point2& point) const {
 	return pimpl->contains(point);
+}
+
+bool ConvexPolygon::collides(const ConvexPolygon& other) const {
+	return pimpl->collides(*other.pimpl);
 }
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {

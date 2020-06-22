@@ -109,6 +109,19 @@ public:
 	bool contains(const Point2& point) const;
 
 	/*!
+	 * Test whether this convex polygon collides with another convex polygon.
+	 *
+	 * If it's only the vertices and edges of the convex polygon that collide,
+	 * they are not considered to be colliding. The convex polygons are only
+	 * considered to be colliding if they have an area of overlap greater than
+	 * zero.
+	 * \param other The convex polygon to check for collision against.
+	 * \return `true` if this and the other convex polygon collide, or `false`
+	 * if they don't.
+	 */
+	bool collides(const ConvexPolygon& other) const;
+
+	/*!
 	 * Get the vertices of the convex hull.
 	 */
 	const std::vector<Point2>& get_vertices() const;
