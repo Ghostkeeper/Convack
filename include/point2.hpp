@@ -73,6 +73,13 @@ struct Point2 {
 	friend std::ostream& operator <<(std::ostream& output_stream, const Point2& point);
 
 	/*!
+	 * Computes the dot product of this point and another point.
+	 * \param other The point to compute the dot product with.
+	 * \return The dot product of the two vectors.
+	 */
+	area_t dot(const Point2& other) const;
+
+	/*!
 	 * Calculate the squared magnitude of this point when seen as a vector from
 	 * the 0,0 coordinate.
 	 *

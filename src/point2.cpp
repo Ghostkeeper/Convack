@@ -25,6 +25,10 @@ std::ostream& operator <<(std::ostream& output_stream, const Point2& point) {
 	return output_stream << "(" << point.x << "," << point.y << ")";
 }
 
+area_t Point2::dot(const Point2& other) const {
+	return x * other.x + y * other.y;
+}
+
 area_t Point2::magnitude2() const {
 	return x * x + y * y;
 }
