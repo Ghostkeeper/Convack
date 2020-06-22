@@ -298,6 +298,14 @@ TEST(ConvexPolygon, ColliesTwoEmpty) {
 }
 
 /*!
+ * Test collision between an empty convex polygon and a normal convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, CollidesEmpty) {
+	const ConvexPolygon a({});
+	EXPECT_FALSE(a.collides(ConvexPolygon(triangle))) << "An empty convex polygon has no area and so doesn't collide with anything at all.";
+}
+
+/*!
  * Tests that an empty convex polygon never contains any points.
  */
 TEST(ConvexPolygon, ContainsEmpty) {
