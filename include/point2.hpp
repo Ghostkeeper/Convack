@@ -56,6 +56,8 @@ struct Point2 {
 	/*!
 	 * Subtracts the coordinates of one point from those of another
 	 * element-wise.
+	 * \param other The point to subtract from this point.
+	 * \return A new point with the result of the subtraction.
 	 */
 	Point2 operator -(const Point2& other) const;
 
@@ -64,6 +66,9 @@ struct Point2 {
 	 *
 	 * This is useful for debugging, since it allows printing the point to a
 	 * stream directly, giving you a reasonably readable output.
+	 * \param output_stream The stream to add a representation of this point to.
+	 * \param point The point to stream.
+	 * \return The given stream.
 	 */
 	friend std::ostream& operator <<(std::ostream& output_stream, const Point2& point);
 
@@ -76,6 +81,7 @@ struct Point2 {
 	 * comparing the magnitude of multiple vertices, since the square root is
 	 * monotonic. If the squared magnitude is bigger, then the actual magnitude
 	 * is also bigger.
+	 * \return The squared magnitude of this point.
 	 */
 	area_t magnitude2() const;
 };
