@@ -100,6 +100,9 @@ public:
 	 * to prevent going into an infinite loop of checking back and forth.
 	 */
 	bool collides(const Impl& other, const bool check_other = true) const {
+		if(vertices.size() < 3 || other.vertices.size() < 3) { //Either of the convex polygons has no area, so there can be no area of overlap.
+			return false;
+		}
 		//TODO: Speed up by checking with a bounding box or reduced resolution first.
 
 		//This uses the separating axes theorem (SAT) to find collisions between convex polygons in quadratic time.
@@ -118,9 +121,8 @@ public:
 			not colliding. */
 
 			bool axis_overlap = false;
-			const std::vector<Point2>& other_vertices = other.get_vertices(); //Convenience alias.
-			for(size_t other_vertex = 0; other_vertex < other_vertices.size(); ++other_vertex) {
-				const area_t projection = axis_vector.dot(other_vertices[other_vertex]);
+			for(size_t other_vertex = 0; other_vertex < other.vertices.size(); ++other_vertex) {
+				const area_t projection = axis_vector.dot(other.vertices[other_vertex]);
 				if(projection < 0) {
 					axis_overlap = true;
 					break;
