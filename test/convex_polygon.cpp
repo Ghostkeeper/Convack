@@ -386,4 +386,19 @@ TEST_F(ConvexPolygonFixture, ContainsEdge) {
 	EXPECT_FALSE(polygon.contains(Point2(80, 0))) << "This point is aligned with the line through one of the edges, but is actually completely outside of the triangle.";
 }
 
+/*!
+ * Test moving the convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, Translate) {
+	ConvexPolygon polygon(triangle);
+	polygon.translate(42, 69);
+
+	const ConvexPolygon ground_truth({
+		Point2(42, 69),
+		Point2(92, 69),
+		Point2(67, 119)
+	});
+	EXPECT_EQ(polygon, ground_truth) << "The convex polygon was moved 42 towards positive X and 69 towards positive Y, so all vertices must be translated.";
+}
+
 }
