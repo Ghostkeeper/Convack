@@ -321,6 +321,17 @@ TEST_F(ConvexPolygonFixture, CollidesVertex) {
 }
 
 /*!
+ * Test collision between a line and a normal convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, CollidesLine) {
+	const ConvexPolygon line_outside({Point2(1000, 1000), Point2(1010, 1000)}); //A 2-vertex polygon very far away from the triangle.
+	EXPECT_FALSE(line_outside.collides(ConvexPolygon(triangle))) << "The line is far away from the convex polygon.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(line_outside)) << "The inverse always gives the same result.";
+
+	const ConvexPolygon line_through({Point2(0, 25), Point2(49, 25)}); //This line goes through the convex polygon. Neither of the vertices are inside.
+}
+
+/*!
  * Tests that an empty convex polygon never contains any points.
  */
 TEST(ConvexPolygon, ContainsEmpty) {
