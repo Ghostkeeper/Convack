@@ -19,6 +19,7 @@ set(convack_sources
 	convex_polygon.cpp
 	point2.cpp
 	scene.cpp
+	transformation.cpp
 )
 set(convack_source_paths "")
 foreach(f IN LISTS convack_sources)
