@@ -51,4 +51,15 @@ TEST(Transformation, Rotation) {
 	expect_points_eq(rotation.apply(Point2(42, 0)), Point2(0, -42), "This point was rotated 3/4 turn counterclockwise (1/4 turn clockwise), and so now points down instead of to the right.");
 }
 
+/*!
+ * Test first translating a point, then rotating it. Two transformations in one
+ * matrix.
+ */
+TEST(Transformation, TranslationRotation) {
+	const double pi = std::acos(-1);
+	Transformation transformation = Transformation().translate(0, 10).rotate(pi / 2); //First translate, then rotate!
+	expect_points_eq(transformation.apply(Point2(0, 0)), Point2(-10, 0), "First move the point upwards to 0,10, then rotate 1/4 turn counterclockwise to point to the left.");
+	expect_points_eq(transformation.apply(Point2(5, 0)), Point2(-10, 5), "First move the point upwards to 5,10, then rotate 1/4 turn counterclockwise to point to the left.");
+}
+
 }
