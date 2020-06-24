@@ -31,7 +31,7 @@ Transformation& Transformation::rotate(const double angle_radians) {
 	new_data[2] = cosine * data[2] - sine * data[3];
 	new_data[3] = sine * data[2] + cosine * data[3];
 	new_data[4] = cosine * data[4] - sine * data[5];
-	new_data[5] = sine * data[5] + cosine * data[6];
+	new_data[5] = sine * data[4] + cosine * data[5];
 	std::swap(data, new_data);
 	return *this;
 }
