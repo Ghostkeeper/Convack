@@ -42,6 +42,7 @@ if(BUILD_TESTS)
 	#Instead of slashes for the directories, use periods.
 	set(test_names
 		convex_polygon
+		transformation
 	)
 
 	#To make sure that the tests are built before running them, add the building of these tests as an additional test.
