@@ -4,6 +4,7 @@
  */
 
 #include <algorithm> //For std::shuffle.
+#include <cmath> //To calculate correct rotation matrices.
 #include <gtest/gtest.h> //To run the test.
 #include <random> //For fuzz testing.
 #include <vector> //To store vertices of test polygons.
@@ -399,6 +400,32 @@ TEST_F(ConvexPolygonFixture, Translate) {
 		Point2(67, 119)
 	});
 	EXPECT_EQ(polygon, ground_truth) << "The convex polygon was moved 42 towards positive X and 69 towards positive Y, so all vertices must be translated.";
+}
+
+/*!
+ * Test rotating the convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, Rotate) {
+	ConvexPolygon polygon(triangle);
+	constexpr double pi = std::acos(-1);
+	polygon.rotate(pi / 2);
+
+	const ConvexPolygon ground_truth({
+		Point2(0, 0),
+		Point2(0, 50),
+		Point2(-50, 25)
+	});
+
+	//To test, we need to do approximate equality since rounding errors may occur.
+	//This simple assertion will fail if the polygon's vertices are shifted in the array!
+	//Technically that should not fail, since the polygon is still the same then and that is acceptable.
+	//However this case is very unlikely considering any implementation of rotating the polygon.
+	//So this is now a much simpler comparison vertex-by-vertex.
+	EXPECT_EQ(polygon.get_vertices().size(), ground_truth.get_vertices().size()) << "Rotation doesn't create or destroy vertices.";
+	for(size_t vertex = 0; vertex < polygon.get_vertices().size(); ++vertex) {
+		EXPECT_NEAR(polygon.get_vertices()[vertex].x, ground_truth.get_vertices()[vertex].x, 0.0000001) << "The point must be rotated 1/4 turn around 0,0.";
+		EXPECT_NEAR(polygon.get_vertices()[vertex].y, ground_truth.get_vertices()[vertex].y, 0.0000001) << "The point must be rotated 1/4 turn around 0,0.";
+	}
 }
 
 }
