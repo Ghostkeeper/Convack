@@ -14,4 +14,10 @@ Transformation::Transformation() {
 	data = {1, 0, 0, 1, 0, 0};
 }
 
+Transformation& Transformation::translate(const coordinate_t x, const coordinate_t y) {
+	data[4] += x;
+	data[5] += y;
+	return *this;
+}
+
 }
