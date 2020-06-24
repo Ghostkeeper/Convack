@@ -7,6 +7,7 @@
 
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
+#include "transformation.hpp" //To translate and rotate the convex hull.
 
 namespace convack {
 
@@ -150,6 +151,19 @@ public:
 		return vertices;
 	}
 
+	/*! @copydoc ConvexPolygon::translate(const coordinate_t, const coordinate_t)
+	 */
+	void translate(const coordinate_t x, const coordinate_t y) {
+		/* This actually applies the transformation to the coordinates. We
+		assume here that the vertices are requested more often than the
+		transformation changed. Applying the transformation once is then more
+		efficient. */
+		const Transformation translation = Transformation().translate(x, y);
+		for(Point2& vertex : vertices) {
+			vertex = translation.apply(vertex);
+		}
+	}
+
 private:
 	/*!
 	 * Executes the gift wrapping algorithm on a set of points to create a
@@ -248,6 +262,10 @@ bool ConvexPolygon::collides(const ConvexPolygon& other) const {
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 	return pimpl->get_vertices();
+}
+
+void ConvexPolygon::translate(const coordinate_t x, const coordinate_t y) {
+	pimpl->translate(x, y);
 }
 
 }

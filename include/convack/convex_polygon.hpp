@@ -126,6 +126,11 @@ public:
 	 */
 	const std::vector<Point2>& get_vertices() const;
 
+	/*!
+	 * Move this convex polygon in any direction.
+	 */
+	void translate(const coordinate_t x, const coordinate_t y);
+
 private:
 	/*!
 	 * The implementation of the convex polygon is separated into this class.
