@@ -127,7 +127,22 @@ public:
 	const std::vector<Point2>& get_vertices() const;
 
 	/*!
+	 * Rotate this convex polygon.
+	 *
+	 * The rotation is always made around the coordinate origin `(0, 0)`. If the
+	 * rotation needs to be made around a different point, translate the convex
+	 * polygon first so that the translated rotation point ends up at `(0, 0)`,
+	 * then rotate it, and then translate it back.
+	 *
+	 * The amount of rotation is in radians (not degrees) and counter-clockwise.
+	 * \param angle_radians The amount of rotation in radians.
+	 */
+	void rotate(const double angle_radians);
+
+	/*!
 	 * Move this convex polygon in any direction.
+	 * \param x The translation along the X axis.
+	 * \param y The translation along the Y axis.
 	 */
 	void translate(const coordinate_t x, const coordinate_t y);
 

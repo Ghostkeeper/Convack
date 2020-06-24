@@ -154,13 +154,24 @@ public:
 	/*! @copydoc ConvexPolygon::translate(const coordinate_t, const coordinate_t)
 	 */
 	void translate(const coordinate_t x, const coordinate_t y) {
-		/* This actually applies the transformation to the coordinates. We
-		assume here that the vertices are requested more often than the
-		transformation changed. Applying the transformation once is then more
-		efficient. */
+		/* This actually applies the transformation to the vertices. We assume
+		here that the vertices are requested more often than the transformation
+		changed. Applying the transformation once is then more efficient. */
 		const Transformation translation = Transformation().translate(x, y);
 		for(Point2& vertex : vertices) {
 			vertex = translation.apply(vertex);
+		}
+	}
+
+	/*! @copydoc ConvexPolygon::rotate(const double)
+	 */
+	void rotate(const double angle_radians) {
+		/* This actually applies the transformation to the vertices. We assume
+		here that the vertices are requested more often than the transformation
+		changed. Applying the transformation once is then more efficient. */
+		const Transformation rotation = Transformation().rotate(angle_radians);
+		for(Point2& vertex : vertices) {
+			vertex = rotation.apply(vertex);
 		}
 	}
 
@@ -266,6 +277,10 @@ const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 
 void ConvexPolygon::translate(const coordinate_t x, const coordinate_t y) {
 	pimpl->translate(x, y);
+}
+
+void ConvexPolygon::rotate(const double angle_radians) {
+	pimpl->rotate(angle_radians);
 }
 
 }
