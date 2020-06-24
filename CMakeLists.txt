@@ -28,7 +28,7 @@ endforeach()
 
 #The main target.
 add_library(convack SHARED ${convack_source_paths})
-target_include_directories(convack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(convack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/convack")
 
 #Automated tests.
 option(BUILD_TESTS "Build tests to verify correctness of the library." OFF)
