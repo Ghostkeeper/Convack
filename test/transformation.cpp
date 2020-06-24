@@ -62,4 +62,15 @@ TEST(Transformation, TranslationRotation) {
 	expect_points_eq(transformation.apply(Point2(5, 0)), Point2(-10, 5), "First move the point upwards to 5,10, then rotate 1/4 turn counterclockwise to point to the left.");
 }
 
+/*!
+ * Test first rotating a point, then translating it. This is the inverse order
+ * of the previous test.
+ */
+TEST(Transformation, RotationTranslation) {
+	const double pi = std::acos(-1);
+	Transformation transformation = Transformation().rotate(pi).translate(0, 10); //First rotate, then translate!
+	expect_points_eq(transformation.apply(Point2(0, 0)), Point2(0, 10), "First rotate, which does nothing since we're already at 0,0, then translate to 10,0.");
+	expect_points_eq(transformation.apply(Point2(5, 0)), Point2(-5, 10), "First rotate half a turn, which moves the point to -5,0, then translate further towards positive Y.");
+}
+
 }
