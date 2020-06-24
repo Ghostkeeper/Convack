@@ -47,6 +47,18 @@ struct Transformation {
 	 * multiple transformation functions.
 	 */
 	Transformation& translate(const coordinate_t x, const coordinate_t y);
+
+	/*!
+	 * Adds a rotation to this transformation matrix.
+	 *
+	 * From this point on, the points transformed by this transformation will be
+	 * rotated as well.
+	 * \param angle_radians The angle to rotate the transformation by, in
+	 * radians counter-clockwise.
+	 * \return A reference to this transformation itself. This way you can chain
+	 * multiple transformation functions.
+	 */
+	Transformation& rotate(const double angle_radians);
 };
 
 }
