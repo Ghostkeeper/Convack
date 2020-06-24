@@ -12,6 +12,8 @@
 
 namespace convack {
 
+class Point2;
+
 /*!
  * This data structure represents a transformation matrix for 2D affine
  * transformations.
@@ -26,16 +28,11 @@ public:
 	Transformation();
 
 	/*!
-	 * Adds a translation to this transformation matrix.
-	 *
-	 * From this point on, the points transformed by this transformation will be
-	 * translated as well.
-	 * \param x The distance to translate points in the X dimension.
-	 * \param y The distance to translate points in the Y dimension.
-	 * \return A reference to this transformation itself. This way you can chain
-	 * multiple transformation functions.
+	 * Apply this transformation to a point.
+	 * \param point The point to apply the transformation to.
+	 * \return A transformed point.
 	 */
-	Transformation& translate(const coordinate_t x, const coordinate_t y);
+	Point2 apply(const Point2& point) const;
 
 	/*!
 	 * Adds a rotation to this transformation matrix.
@@ -48,6 +45,18 @@ public:
 	 * multiple transformation functions.
 	 */
 	Transformation& rotate(const double angle_radians);
+
+	/*!
+	 * Adds a translation to this transformation matrix.
+	 *
+	 * From this point on, the points transformed by this transformation will be
+	 * translated as well.
+	 * \param x The distance to translate points in the X dimension.
+	 * \param y The distance to translate points in the Y dimension.
+	 * \return A reference to this transformation itself. This way you can chain
+	 * multiple transformation functions.
+	 */
+	Transformation& translate(const coordinate_t x, const coordinate_t y);
 
 private:
 	/*!

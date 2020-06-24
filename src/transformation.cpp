@@ -3,9 +3,10 @@
  * Any copyright is dedicated to the public domain. See LICENSE.md for more details.
  */
 
-#include "transformation.hpp"
-
 #include <cmath> //To compute rotation matrices.
+
+#include "point2.hpp" //To apply transformations to points.
+#include "transformation.hpp" //Definitions we're implementing here.
 
 namespace convack {
 
@@ -16,10 +17,8 @@ Transformation::Transformation() {
 	data = {1, 0, 0, 1, 0, 0};
 }
 
-Transformation& Transformation::translate(const coordinate_t x, const coordinate_t y) {
-	data[4] += x;
-	data[5] += y;
-	return *this;
+Point2 Transformation::apply(const Point2& point) const {
+	return Point2(data[0] * point.x + data[2] * point.y + data[4], data[1] * point.x + data[3] * point.y + data[5]);
 }
 
 Transformation& Transformation::rotate(const double angle_radians) {
@@ -34,6 +33,12 @@ Transformation& Transformation::rotate(const double angle_radians) {
 	new_data[4] = cosine * data[4] - sine * data[5];
 	new_data[5] = sine * data[5] + cosine * data[6];
 	std::swap(data, new_data);
+	return *this;
+}
+
+Transformation& Transformation::translate(const coordinate_t x, const coordinate_t y) {
+	data[4] += x;
+	data[5] += y;
 	return *this;
 }
 
