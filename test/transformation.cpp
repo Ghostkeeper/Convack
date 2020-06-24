@@ -46,6 +46,9 @@ TEST(Transformation, Rotation) {
 	Transformation rotation = Transformation().rotate(pi / 2); //Rotate a quarter turn anticlockwise.
 	expect_points_eq(rotation.apply(Point2(0, 0)), Point2(0, 0), "Rotating a point at 0,0 around 0,0 has no effect.");
 	expect_points_eq(rotation.apply(Point2(42, 0)), Point2(0, 42), "This point should get rotated a quarter turn anticlockwise around 0,0.");
+
+	rotation.rotate(pi); //Rotate another half turn, so now in total 3/4 turn.
+	expect_points_eq(rotation.apply(Point2(42, 0)), Point2(0, -42), "This point was rotated 3/4 turn counterclockwise (1/4 turn clockwise), and so now points down instead of to the right.");
 }
 
 }
