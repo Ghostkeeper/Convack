@@ -17,6 +17,10 @@ Transformation::Transformation() {
 	data = {1, 0, 0, 1, 0, 0};
 }
 
+bool Transformation::operator ==(const Transformation& other) const {
+	return data == other.data;
+}
+
 Point2 Transformation::apply(const Point2& point) const {
 	return Point2(data[0] * point.x + data[2] * point.y + data[4], data[1] * point.x + data[3] * point.y + data[5]);
 }

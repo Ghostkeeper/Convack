@@ -28,6 +28,11 @@ public:
 	Transformation();
 
 	/*!
+	 * Test if two transformations yield the same result.
+	 */
+	bool operator ==(const Transformation& other) const;
+
+	/*!
 	 * Apply this transformation to a point.
 	 * \param point The point to apply the transformation to.
 	 * \return A transformed point.
