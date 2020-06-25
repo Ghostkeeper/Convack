@@ -339,6 +339,19 @@ TEST_F(ConvexPolygonFixture, CollidesLine) {
 }
 
 /*!
+ * Test collision between two convex polygons that are very far away from each
+ * other.
+ */
+TEST_F(ConvexPolygonFixture, CollidesFar) {
+	const ConvexPolygon a(triangle);
+	ConvexPolygon b(triangle);
+	b.translate(1000, 0);
+
+	EXPECT_FALSE(a.collides(b)) << "The two convex polygons are very far away from each other, so they don't collide.";
+	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
+}
+
+/*!
  * Tests that an empty convex polygon never contains any points.
  */
 TEST(ConvexPolygon, ContainsEmpty) {
