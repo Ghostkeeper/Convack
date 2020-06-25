@@ -111,7 +111,7 @@ public:
 		bool collision_this_side = true;
 		for(size_t this_edge = 0; this_edge < vertices.size(); ++this_edge) {
 			const Point2 edge_vector = vertices[(this_edge + 1) % vertices.size()] - vertices[this_edge];
-			const Point2 axis_vector(-edge_vector.y, edge_vector.x); //Rotate 90 degrees to get an axis perpendicular to this edge to project the other polygon on.
+			const Point2 axis_vector(edge_vector.y, -edge_vector.x); //Rotate 90 degrees to get an axis perpendicular to this edge to project the other polygon on.
 
 			/* Because the convex hull is winding counterclockwise, this convex
 			hull will always be completely to the left of the edge (negative on
