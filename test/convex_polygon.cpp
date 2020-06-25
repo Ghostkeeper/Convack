@@ -352,6 +352,21 @@ TEST_F(ConvexPolygonFixture, CollidesFar) {
 }
 
 /*!
+ * Test collision between two convex polygons that are very near to each other.
+ *
+ * In this test they are so close together that a simple bounding box check
+ * would consider them possibly colliding.
+ */
+TEST_F(ConvexPolygonFixture, CollidesNear) {
+	const ConvexPolygon a(triangle);
+	ConvexPolygon b(triangle);
+	b.translate(30, 45); //This brings the 0,0 lower left corner up to 30,40, which is just next to the upper middle corner of the other triangle.
+
+	EXPECT_FALSE(a.collides(b)) << "The two convex polygons are close, but not colliding.";
+	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
+}
+
+/*!
  * Tests that an empty convex polygon never contains any points.
  */
 TEST(ConvexPolygon, ContainsEmpty) {
