@@ -360,9 +360,25 @@ TEST_F(ConvexPolygonFixture, CollidesFar) {
 TEST_F(ConvexPolygonFixture, CollidesNear) {
 	const ConvexPolygon a(triangle);
 	ConvexPolygon b(triangle);
-	b.translate(30, 45); //This brings the 0,0 lower left corner up to 30,40, which is just next to the upper middle corner of the other triangle.
+	b.translate(30, 45); //This brings the 0,0 lower left corner up to 30,45, which is just next to the upper middle corner of the other triangle.
 
 	EXPECT_FALSE(a.collides(b)) << "The two convex polygons are close, but not colliding.";
+	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
+}
+
+/*!
+ * Test collision between two convex polygons that are touching with their
+ * contours.
+ *
+ * This touch is not considered to be an actual collision, so the implementation
+ * must report that they are not colliding.
+ */
+TEST_F(ConvexPolygonFixture, CollidesTouching) {
+	const ConvexPolygon a(triangle);
+	ConvexPolygon b(triangle);
+	b.translate(30, 40); //This brings the 0,0 lower left corner up to 30,45, which is on the edge between the upper middle corner and the lower right corner of the triangle.
+
+	EXPECT_FALSE(a.collides(b)) << "The edge case of a vertex touching an edge of the other convex polygon is not considered a collision.";
 	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
 }
 
