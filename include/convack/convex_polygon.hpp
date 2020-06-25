@@ -9,10 +9,11 @@
 #include <memory> //For unique_ptr.
 #include <vector> //To store the coordinates of this convex polygon.
 
-#include "point2.hpp" //The vertices of this convex polygon.
+#include "coordinate.hpp" //To translate the convex polygon by coordinates.
 
 namespace convack {
 
+class Point2;
 class Transformation;
 
 /*!

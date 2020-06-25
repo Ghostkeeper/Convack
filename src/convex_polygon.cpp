@@ -7,6 +7,7 @@
 
 #include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
+#include "point2.hpp" //To store the vertices of the convex polygon.
 #include "transformation.hpp" //To translate and rotate the convex hull.
 
 namespace convack {

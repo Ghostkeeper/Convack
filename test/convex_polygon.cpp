@@ -10,6 +10,7 @@
 #include <vector> //To store vertices of test polygons.
 
 #include "convex_polygon.hpp" //The unit under test.
+#include "point2.hpp" //To construct convex polygons and vertices for testing.
 #include "transformation.hpp" //To test tracking of transformations.
 
 namespace convack {
