@@ -330,6 +330,12 @@ TEST_F(ConvexPolygonFixture, CollidesLine) {
 	EXPECT_FALSE(ConvexPolygon(triangle).collides(line_outside)) << "The inverse always gives the same result.";
 
 	const ConvexPolygon line_through({Point2(0, 25), Point2(49, 25)}); //This line goes through the convex polygon. Neither of the vertices are inside.
+	EXPECT_FALSE(line_through.collides(ConvexPolygon(triangle))) << "Although the line goes through the convex polygon, collision with only an edge of the line doesn't count.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(line_through)) << "The inverse always gives the same result.";
+
+	const ConvexPolygon line_inside({Point2(10, 2), Point2(40, 2)}); //This line starts and ends in the convex polygon.
+	EXPECT_FALSE(line_inside.collides(ConvexPolygon(triangle))) << "Although the line is completely inside the convex polygon, collision with only an edge of the line doesn't count.";
+	EXPECT_FALSE(ConvexPolygon(triangle).collides(line_inside)) << "The inverse always gives the same result.";
 }
 
 /*!
