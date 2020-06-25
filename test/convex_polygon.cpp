@@ -382,12 +382,32 @@ TEST_F(ConvexPolygonFixture, CollidesTouching) {
 	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
 }
 
+/*!
+ * Test collision between two convex polygons that actually overlap.
+ */
 TEST_F(ConvexPolygonFixture, CollidesOverlapping) {
 	const ConvexPolygon a(triangle);
 	ConvexPolygon b(triangle);
 	b.translate(25, 25); //This brings the 0,0 lower left corner up to 25,25, right in the middle of the other triangle.
 
 	EXPECT_TRUE(a.collides(b)) << "One of the vertices of B is inside A.";
+	EXPECT_TRUE(b.collides(a)) << "The inverse always gives the same result.";
+}
+
+/*!
+ * Test collision between two convex polygons where one polygon pierces the
+ * other without actually having a vertex inside the other polygon.
+ */
+TEST_F(ConvexPolygonFixture, CollidesThrough) {
+	const ConvexPolygon a(triangle);
+	const ConvexPolygon b({
+		Point2(0, 10),
+		Point2(50, 10),
+		Point2(50, 20),
+		Point2(0, 20)
+	}); //Forms a rectangle without any vertex inside the triangle, but where the edges cross the edges of the triangle.
+
+	EXPECT_TRUE(a.collides(b)) << "B crosses through A.";
 	EXPECT_TRUE(b.collides(a)) << "The inverse always gives the same result.";
 }
 
