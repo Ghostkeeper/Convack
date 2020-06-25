@@ -8,9 +8,16 @@
 namespace convack {
 
 class Scene::Impl {
-
+public:
+	void pack(std::vector<ConvexPolygon>& convex_polygons) const {
+		//TODO.
+	}
 };
 
 Scene::Scene() : pimpl(new Impl()) {}
+
+void Scene::pack(std::vector<ConvexPolygon>& convex_polygons) const {
+	pimpl->pack(convex_polygons);
+}
 
 }

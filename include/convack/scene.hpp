@@ -7,8 +7,11 @@
 #define CONVACK_SCENE
 
 #include <memory> //For unique_ptr.
+#include <vector> //As input for a set of convex polygons.
 
 namespace convack {
+
+class ConvexPolygon;
 
 /*!
  * A space to pack convex polygons into.
@@ -35,6 +38,20 @@ public:
 	 * packed into the scene yet.
 	 */
 	Scene();
+
+	/*!
+	 * Create a packing of a given list of convex polygons.
+	 *
+	 * The convex polygons will be modified in-place to fit in the scene. To
+	 * draw the result, you can use the modified vertex lists in the convex
+	 * polygons. To figure out how the convex polygons were moved and/or rotated
+	 * in order to pack them, refer to the transformation of the convex
+	 * polygons.
+	 *
+	 * The order of these convex polygons will not be modified. You can use this
+	 * order to identify which convex polygon was which.
+	 */
+	void pack(std::vector<ConvexPolygon>& convex_polygons) const;
 
 private:
 	/*!
