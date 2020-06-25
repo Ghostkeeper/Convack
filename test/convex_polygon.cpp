@@ -10,6 +10,7 @@
 #include <vector> //To store vertices of test polygons.
 
 #include "convex_polygon.hpp" //The unit under test.
+#include "transformation.hpp" //To test tracking of transformations.
 
 namespace convack {
 
@@ -464,6 +465,23 @@ TEST_F(ConvexPolygonFixture, ContainsEdge) {
 	EXPECT_FALSE(polygon.contains(Point2(30, 0))) << "This point is on the lower border of the triangle, and the border is considered outside.";
 	EXPECT_FALSE(polygon.contains(Point2(50, 0))) << "This point is on one of the vertices of the triangle, and the border is considered outside.";
 	EXPECT_FALSE(polygon.contains(Point2(80, 0))) << "This point is aligned with the line through one of the edges, but is actually completely outside of the triangle.";
+}
+
+/*!
+ * Test tracking the current transformation through multiple transformations.
+ */
+TEST_F(ConvexPolygonFixture, CurrentTransformation) {
+	ConvexPolygon polygon(triangle);
+	EXPECT_EQ(polygon.current_transformation(), Transformation()) << "The initial transformation of a convex polygon must be the identity transformation.";
+
+	polygon.translate(11, 22);
+	EXPECT_EQ(polygon.current_transformation(), Transformation().translate(11, 22)) << "When translating a convex polygon, the current transformation must be tracked.";
+
+	polygon.rotate(3);
+	EXPECT_EQ(polygon.current_transformation(), Transformation().translate(11, 22).rotate(3)) << "When rotating a convex polygon, the current transformation must be tracked.";
+
+	polygon.translate(-11, -22);
+	EXPECT_EQ(polygon.current_transformation(), Transformation().translate(11, 22).rotate(3).translate(-11, -22)) << "Multiple transformations must be stacked together and reported as one transformation.";
 }
 
 /*!
