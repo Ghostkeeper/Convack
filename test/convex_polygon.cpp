@@ -382,6 +382,15 @@ TEST_F(ConvexPolygonFixture, CollidesTouching) {
 	EXPECT_FALSE(b.collides(a)) << "The inverse always gives the same result.";
 }
 
+TEST_F(ConvexPolygonFixture, CollidesOverlapping) {
+	const ConvexPolygon a(triangle);
+	ConvexPolygon b(triangle);
+	b.translate(25, 25); //This brings the 0,0 lower left corner up to 25,25, right in the middle of the other triangle.
+
+	EXPECT_TRUE(a.collides(b)) << "One of the vertices of B is inside A.";
+	EXPECT_TRUE(b.collides(a)) << "The inverse always gives the same result.";
+}
+
 /*!
  * Tests that an empty convex polygon never contains any points.
  */
