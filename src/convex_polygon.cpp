@@ -122,8 +122,8 @@ public:
 			not colliding. */
 
 			bool axis_overlap = false;
-			for(size_t other_vertex = 0; other_vertex < other.vertices.size(); ++other_vertex) {
-				const area_t projection = axis_vector.dot(other.vertices[other_vertex]);
+			for(const Point2& other_vertex : other.vertices) {
+				const area_t projection = axis_vector.dot(other_vertex - vertices[this_edge]);
 				if(projection < 0) {
 					axis_overlap = true;
 					break;
