@@ -108,7 +108,6 @@ public:
 
 		//This uses the separating axes theorem (SAT) to find collisions between convex polygons in quadratic time.
 		//Loop over all edges to see if the two convex polygons are completely separated by that axis.
-		bool collision_this_side = true;
 		for(size_t this_edge = 0; this_edge < vertices.size(); ++this_edge) {
 			const Point2 edge_vector = vertices[(this_edge + 1) % vertices.size()] - vertices[this_edge];
 			const Point2 axis_vector(edge_vector.y, -edge_vector.x); //Rotate 90 degrees to get an axis perpendicular to this edge to project the other polygon on.
@@ -130,11 +129,8 @@ public:
 				}
 			}
 			if(!axis_overlap) { //No overlap on this axis, so the two polygons don't collide.
-				collision_this_side = false;
+				return false;
 			}
-		}
-		if(collision_this_side) {
-			return true; //None of the edges are separating, so the other polygon must be going through this one.
 		}
 
 		//Also check from the other side.
@@ -142,7 +138,7 @@ public:
 			constexpr bool check_other_again = false; //Don't check this one again after checking the other. That would result in infinite recursion.
 			return other.collides(*this, check_other_again);
 		}
-		return false; //Neither are colliding.
+		return true; //There is overlap everywhere, from both sides.
 	}
 
 	/*! @copydoc ConvexPolygon::get_vertices() const
