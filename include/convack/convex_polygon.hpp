@@ -13,6 +13,8 @@
 
 namespace convack {
 
+class Transformation;
+
 /*!
  * Data structure representing one convex polygon.
  *
@@ -120,6 +122,19 @@ public:
 	 * if they don't.
 	 */
 	bool collides(const ConvexPolygon& other) const;
+
+	/*!
+	 * Get the current transformation of this convex polygon.
+	 *
+	 * This is the product of all transformations applied to the convex polygon
+	 * since it was constructed. The original vertices can't be modified while
+	 * the convex polygon instance is alive, so applying the inverse of this
+	 * transformation matrix to the current vertex list should result in the
+	 * original vertices that the convex polygon was constructed with.
+	 * \return The transformation applied to the convex polygon that resulted in
+	 * the current position of the vertices.
+	 */
+	const Transformation& current_transformation() const;
 
 	/*!
 	 * Get the vertices of the convex hull.

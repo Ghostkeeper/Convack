@@ -18,6 +18,17 @@ public:
 	 */
 	std::vector<Point2> vertices;
 
+	/*!
+	 * The transformation applied so far since the construction of the convex
+	 * polygon.
+	 *
+	 * This transformation is already applied to the vertices. Don't apply it
+	 * again. This field is only for bookkeeping. It's necessary to report a
+	 * usable result to the user of the library if he wants to know how the
+	 * convex polygons have been transformed to pack them.
+	 */
+	Transformation transformation;
+
 	/*! @copydoc ConvexPolygon::convex_hull(const std::vector<Point2>&)
 	 */
 	static ConvexPolygon convex_hull(const std::vector<Point2>& points) {
@@ -141,6 +152,12 @@ public:
 		return true; //There is overlap everywhere, from both sides.
 	}
 
+	/*! @copydoc ConvexPolygon::current_transformation() const
+	 */
+	const Transformation& current_transformation() const {
+		return transformation;
+	}
+
 	/*! @copydoc ConvexPolygon::get_vertices() const
 	 */
 	const std::vector<Point2>& get_vertices() const {
@@ -157,6 +174,7 @@ public:
 		for(Point2& vertex : vertices) {
 			vertex = translation.apply(vertex);
 		}
+		transformation.translate(x, y); //Also track the transformation so far.
 	}
 
 	/*! @copydoc ConvexPolygon::rotate(const double)
@@ -169,6 +187,7 @@ public:
 		for(Point2& vertex : vertices) {
 			vertex = rotation.apply(vertex);
 		}
+		transformation.rotate(angle_radians); //Also track the transformation so far.
 	}
 
 private:
@@ -265,6 +284,10 @@ bool ConvexPolygon::contains(const Point2& point) const {
 
 bool ConvexPolygon::collides(const ConvexPolygon& other) const {
 	return pimpl->collides(*other.pimpl);
+}
+
+const Transformation& ConvexPolygon::current_transformation() const {
+	return pimpl->current_transformation();
 }
 
 const std::vector<Point2>& ConvexPolygon::get_vertices() const {
