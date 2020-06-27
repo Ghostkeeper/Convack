@@ -38,6 +38,11 @@ public:
 	std::vector<Point2> colinear;
 
 	/*!
+	 * A 100-sided regular polygon, approximating a circle of radius 1.
+	 */
+	std::vector<Point2> circle;
+
+	/*!
 	 * Prepare to run a test. This creates the fixture members.
 	 */
 	void SetUp() {
@@ -61,6 +66,13 @@ public:
 		colinear.clear();
 		for(size_t i = 0; i < 100; ++i) {
 			colinear.emplace_back(1.1 * i, 2.2 * i);
+		}
+
+		circle.clear();
+		constexpr double pi = std::acos(-1);
+		for(size_t i = 0; i < 100; ++i) {
+			const double angle = pi * 2 / 100 * i; //Angle in radians.
+			circle.emplace_back(std::cos(angle), std::sin(angle));
 		}
 	}
 };
@@ -320,6 +332,12 @@ TEST(ConvexPolygon, AreaLine) {
  */
 TEST_F(ConvexPolygonFixture, AreaTriangle) {
 	EXPECT_DOUBLE_EQ(ConvexPolygon(triangle).area(), 50.0 * 50.0 / 2) << "This is a triangle with base 50 and height 50.";
+}
+
+TEST_F(ConvexPolygonFixture, AreaCircle) {
+	constexpr double pi = std::acos(-1);
+	constexpr area_t ground_truth = 100.0 * std::sin(pi * 2 / 100) / 2; //Formula for area of a regular polygon (100 vertices, radius 1.0);
+	EXPECT_NEAR(ConvexPolygon(circle).area(), ground_truth, 0.000005) << "This shape is a regular polygon with 100 sides and radius 1.";
 }
 
 /*!
