@@ -300,6 +300,14 @@ TEST(ConvexPolygon, AreaEmpty) {
 }
 
 /*!
+ * Test computing the area of a convex polygon with a single vertex.
+ */
+TEST(ConvexPolygon, AreaSingle) {
+	const ConvexPolygon polygon({Point2(3.14, 6.28)});
+	EXPECT_EQ(polygon.area(), 0) << "A single vertex has no area.";
+}
+
+/*!
  * Test collision between two empty convex polygons.
  */
 TEST(ConvexPolygon, ColliesTwoEmpty) {
