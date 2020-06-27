@@ -316,6 +316,13 @@ TEST(ConvexPolygon, AreaLine) {
 }
 
 /*!
+ * Test computing the area of a simple triangle.
+ */
+TEST_F(ConvexPolygonFixture, AreaTriangle) {
+	EXPECT_DOUBLE_EQ(ConvexPolygon(triangle).area(), 50.0 * 50.0 / 2) << "This is a triangle with base 50 and height 50.";
+}
+
+/*!
  * Test collision between two empty convex polygons.
  */
 TEST(ConvexPolygon, ColliesTwoEmpty) {
