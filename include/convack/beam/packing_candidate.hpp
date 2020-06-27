@@ -16,6 +16,11 @@ class ConvexPolygon;
  * This is a data structure that represents an intermediary state of convex
  * polygon packing.
  *
+ * This effectively functions as a node in the search tree that the beam search
+ * algorithm will search through. The tree is never generated completely (as
+ * that would be `O(N*N!)` in computation and memory usage) but this candidate
+ * can compute for itself what its child nodes are.
+ *
  * The candidate has a fixed set of convex polygons that are packed so far. It
  * also has a score, determined by some measure of what is considered to be a
  * good packing. The score is computed upon construction.
