@@ -9,6 +9,7 @@
 #include <memory> //For unique_ptr.
 #include <vector> //To store the coordinates of this convex polygon.
 
+#include "area.hpp" //To compute cross products, dot products and areas.
 #include "coordinate.hpp" //To translate the convex polygon by coordinates.
 
 namespace convack {
@@ -99,6 +100,12 @@ public:
 	 * to a stream directly, giving you a reasonably readable output.
 	 */
 	friend std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon);
+
+	/*!
+	 * Compute the surface area of this convex polygon.
+	 * \return The surface area of this convex polygon.
+	 */
+	area_t area() const;
 
 	/*!
 	 * Tests whether the given point is contained in this convex polygon.

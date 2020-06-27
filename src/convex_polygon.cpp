@@ -5,7 +5,6 @@
 
 #include <algorithm> //For min_element.
 
-#include "area.hpp" //To compute cross products, dot products and areas.
 #include "convex_polygon.hpp" //The definitions of the implementation defined here.
 #include "point2.hpp" //To store the vertices of the convex polygon.
 #include "transformation.hpp" //To translate and rotate the convex hull.
@@ -86,6 +85,28 @@ public:
 			output_stream << convex_polygon_impl.vertices[i];
 		}
 		return output_stream << "]";
+	}
+
+	/*! @copydoc ConvexPolygon::area() const
+	 */
+	area_t area() const {
+		/* This uses the shoelace formula to compute the area. The shoelace
+		formula sums the areas of the individual triangles formed by two
+		adjacent vertices and the coordinate origin.
+		To calculate the area of a triangle with one vertex on the origin, we'll
+		calculate the area of the parallelogram formed by the original triangle
+		and that triangle mirrored around the line segment we're calculating the
+		area for.
+		The area of the parallelogram needs to be divided by two to arrive at
+		the area of the triangle. Summing up all of those triangles (which may
+		be negative if the edge is clockwise w.r.t. the coordinate origin)
+		results in the total area of the convex polygon. This is the shoelace
+		formula.*/
+		area_t area = 0;
+		for(size_t vertex = 0, previous = vertices.size() - 1; vertex < vertices.size(); ++vertex, previous = vertex) {
+			area += static_cast<area_t>(vertices[previous].x) * vertices[vertex].y - static_cast<area_t>(vertices[previous].y) * vertices[vertex].x;
+		}
+		return area / 2; //Instead of dividing each parallelogram's area by 2, simply divide the total by 2 afterwards.
 	}
 
 	/*! @copydoc ConvexPolygon::contains(const Point2&) const
@@ -277,6 +298,10 @@ bool ConvexPolygon::operator !=(const ConvexPolygon& other) const {
 
 std::ostream& operator <<(std::ostream& output_stream, const ConvexPolygon& convex_polygon) {
 	return output_stream << *convex_polygon.pimpl;
+}
+
+area_t ConvexPolygon::area() const {
+	return pimpl->area();
 }
 
 bool ConvexPolygon::contains(const Point2& point) const {
