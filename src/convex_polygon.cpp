@@ -103,8 +103,9 @@ public:
 		results in the total area of the convex polygon. This is the shoelace
 		formula.*/
 		area_t area = 0;
-		for(size_t vertex = 0, previous = vertices.size() - 1; vertex < vertices.size(); ++vertex, previous = vertex) {
+		for(size_t vertex = 0, previous = vertices.size() - 1; vertex < vertices.size(); ++vertex) {
 			area += static_cast<area_t>(vertices[previous].x) * vertices[vertex].y - static_cast<area_t>(vertices[previous].y) * vertices[vertex].x;
+			previous = vertex;
 		}
 		return area / 2; //Instead of dividing each parallelogram's area by 2, simply divide the total by 2 afterwards.
 	}
