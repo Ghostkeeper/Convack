@@ -11,4 +11,8 @@ PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon*>& packed_obj
 	score = 0; //TODO: Compute score.
 }
 
+double PackingCandidate::get_score() const {
+	return score;
+}
+
 }
