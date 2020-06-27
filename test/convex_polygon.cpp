@@ -292,6 +292,14 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
 }
 
 /*!
+ * Test computing the area of an empty convex polygon.
+ */
+TEST(ConvexPolygon, AreaEmpty) {
+	const ConvexPolygon polygon({});
+	EXPECT_EQ(polygon.area(), 0) << "Empty convex polygons have no area.";
+}
+
+/*!
  * Test collision between two empty convex polygons.
  */
 TEST(ConvexPolygon, ColliesTwoEmpty) {
