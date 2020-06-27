@@ -308,6 +308,14 @@ TEST(ConvexPolygon, AreaSingle) {
 }
 
 /*!
+ * Test computing the area of a convex polygon with two vertices.
+ */
+TEST(ConvexPolygon, AreaLine) {
+	const ConvexPolygon polygon({Point2(42, 69), Point2(69, 42)});
+	EXPECT_EQ(polygon.area(), 0) << "A line has no surface area.";
+}
+
+/*!
  * Test collision between two empty convex polygons.
  */
 TEST(ConvexPolygon, ColliesTwoEmpty) {
