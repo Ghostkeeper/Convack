@@ -43,6 +43,14 @@ public:
 	static ConvexPolygon convex_hull(const std::vector<Point2>& points);
 
 	/*!
+	 * Constructs a new convex hull around a number of convex polygons.
+	 * \param convex_polygons The convex polygons to construct a convex hull
+	 * around.
+	 * \return A new convex polygon around all of the given convex polygons.
+	 */
+	static ConvexPolygon convex_hull(const std::vector<ConvexPolygon>& convex_polygons);
+
+	/*!
 	 * Constructs a new convex polygon using the provided vertices.
 	 *
 	 * The input vertices are assumed to be already convex and in the correct
