@@ -35,6 +35,12 @@ public:
 		return gift_wrapping(points); //TODO: Use Chan's algorithm to construct convex hulls more efficiently.
 	}
 
+	/*! @copydoc ConvexPolygon::convex_hull(const std::vector<ConvexPolygon>&)
+	 */
+	static ConvexPolygon convex_hull(const std::vector<ConvexPolygon>& convex_polygons) {
+		return chans_algorithm(convex_polygons);
+	}
+
 	/*! @copydoc ConvexPolygon::ConvexPolygon(const std::vector<Point2>&)
 	 */
 	Impl(const std::vector<Point2>& vertices) : vertices(vertices) {} //Copy the input vertices into this class.
@@ -263,6 +269,138 @@ private:
 	}
 
 	/*!
+	 * This is an implementation of the second stage of Chan's Algorithm, which
+	 * creates a convex hull around a set of convex polygons.
+	 *
+	 * Chan's algorithm consists of two stages. First, the set of points to
+	 * create a convex hull around is subdivided into a number of subsets and
+	 * the convex hull is computed for each of those subsets. These convex hulls
+	 * can be computed much faster since the subsets are smaller (especially if,
+	 * like in this library, the ordinary convex hull algorithm is quadratic).
+	 * And secondly, it computes the convex hull around each of those convex
+	 * polygons using properties of the convex hull to speed that up.
+	 *
+	 * In the second stage of Chan's algorithm, implemented here, a new convex
+	 * hull is constructed using a variant of the gift wrapping algorithm that
+	 * makes use of the properties of the convex hull to speed up the algorithm.
+	 * As it iteratively constructs the vertices of the resulting convex hull,
+	 * it searches the right-most vertex of each convex polygon w.r.t. the
+	 * direction of the last completed edge using a binary search. Of all of
+	 * these right-most vertices, it chooses the one that's the right-most of
+	 * them all as the new vertex of the final convex hull. This repeats until
+	 * the first vertex is obtained again and the convex hull is closed.
+	 * \param convex_polygons A set of polygons to create a convex hull around.
+	 * \return A convex hull around all of the polygons.
+	 */
+	static ConvexPolygon chans_algorithm(const std::vector<ConvexPolygon>& convex_polygons) {
+		if(convex_polygons.empty()) {
+			return ConvexPolygon({});
+		}
+		if(convex_polygons.size() == 1) {
+			return convex_polygons[0];
+		}
+
+		//First find the left-most vertex among all convex polygons.
+		//This vertex is always in the convex hull.
+		Point2 best(std::numeric_limits<coordinate_t>::max(), 0);
+		size_t best_vertex = -1;
+		size_t best_polygon = -1;
+		for(size_t polygon = 0; polygon < convex_polygons.size(); ++polygon) {
+			const std::vector<Point2>& vertices = convex_polygons[polygon].get_vertices();
+			if(vertices.empty()) {
+				continue;
+			}
+			//Perform a binary search to find the left-most vertex of this convex polygon.
+			size_t lower_bound = 0;
+			size_t upper_bound = vertices.size();
+			while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
+				const size_t pivot = (upper_bound + lower_bound) / 2;
+				//Find which direction around the pivot goes to the left.
+				const Point2& pivot_point = vertices[pivot];
+				const Point2& pivot_upper = vertices[(pivot + 1) % vertices.size()];
+				if(pivot_upper.x < pivot_point.x || (pivot_upper.x == pivot_point.x && pivot_upper.y < pivot_point.y)) { //Upper range is better.
+					lower_bound = pivot + 1;
+					continue;
+				}
+				const Point2& pivot_lower = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
+				if(pivot_lower.x < pivot_point.x || (pivot_lower.x == pivot_point.x && pivot_lower.y < pivot_point.y)) { //Lower range is better.
+					upper_bound = pivot;
+					continue;
+				}
+				//Neither is better. Our pivot is already the leftest!
+				lower_bound = pivot;
+				break;
+			}
+			if(vertices[lower_bound].x < best.x || (vertices[lower_bound].x == best.x && vertices[lower_bound].y < best.y)) {
+				best = vertices[lower_bound];
+				best_vertex = lower_bound;
+				best_polygon = polygon;
+			}
+		}
+		if(best_polygon == size_t(-1)) { //All convex polygons were empty.
+			return ConvexPolygon({});
+		}
+		std::vector<Point2> result;
+
+		//Now iteratively find the next point on the resulting polygon by choosing the right-most convex hull.
+		Point2 last = best;
+		size_t last_polygon = best_polygon;
+		size_t last_vertex = best_vertex;
+		do {
+			result.push_back(best);
+
+			//For the polygon on which the last vertex lays, we already know which the right-most vertex is: It's the next one in the chain.
+			best_vertex = (last_vertex + 1) % convex_polygons[last_polygon].get_vertices().size();
+			best = convex_polygons[last_polygon].get_vertices()[best_vertex];
+			//Scan through the other convex polygons if we find anything better.
+			for(size_t polygon = (last_polygon + 1) % convex_polygons.size(); polygon < last_polygon; polygon = (polygon + 1) % convex_polygons.size()) {
+				const std::vector<Point2>& vertices = convex_polygons[polygon].get_vertices();
+				if(vertices.empty()) {
+					continue;
+				}
+				//Perform a binary search to find the right-most vertex of this convex polygon (compared to the edge between the last and current best vertices).
+				//N.B. This is not the greatest X coordinate, but rather the greatest negative angle!
+				size_t lower_bound = 0;
+				size_t upper_bound = vertices.size();
+				while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
+					const size_t pivot = (upper_bound + lower_bound) / 2;
+					const Point2& pivot_point = vertices[pivot];
+					const area_t pivot_how_left = is_left(last, best, pivot_point);
+					//Find which direction around the pivot goes to the right.
+					const Point2& pivot_upper = vertices[(pivot + 1) % vertices.size()];
+					const area_t pivot_upper_how_left = is_left(last, best, pivot_upper);
+					//If upper is less left (more right), or equally left but farther away, this range is better.
+					if(pivot_upper_how_left < pivot_how_left || (pivot_upper_how_left == pivot_how_left && (pivot_upper - last).magnitude2() > (pivot_point - last).magnitude2())) { //Upper range is better.
+						lower_bound = pivot + 1;
+						continue;
+					}
+					const Point2& pivot_lower = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
+					const area_t pivot_lower_how_left = is_left(last, best, pivot_lower);
+					if(pivot_lower_how_left < pivot_how_left || (pivot_lower_how_left == pivot_how_left && (pivot_lower - last).magnitude2() > (pivot_point - last).magnitude2())) { //Lower range is better.
+						upper_bound = pivot;
+						continue;
+					}
+					//Neither is better. Our pivot is already the rightest!
+					lower_bound = pivot;
+					break;
+				}
+				//We've found the right-most vertex of this convex polygon (index lower_bound). Is it better than the current best?
+				const area_t how_left = is_left(last, best, vertices[lower_bound]);
+				if(how_left < 0 || (how_left == 0 && (vertices[lower_bound] - last).magnitude2() > (best - last).magnitude2())) { //Is it more to the right, or equally but farther?
+					best = vertices[lower_bound];
+					best_vertex = lower_bound;
+					best_polygon = polygon;
+				}
+			}
+
+			//The best vertex is now the right-most vertex of all convex hulls!
+			result.push_back(best);
+		} while(best != result[0]); //Continue until we're looping back to the first vertex of the result.
+
+		return ConvexPolygon(result);
+	}
+
+	/*!
 	 * Tests whether the `query` point is to the left, to the right or on top of
 	 * the line through `a` and `b`.
 	 *
@@ -281,6 +419,10 @@ private:
 
 ConvexPolygon ConvexPolygon::convex_hull(const std::vector<Point2>& points) {
 	return ConvexPolygon::Impl::convex_hull(points);
+}
+
+ConvexPolygon ConvexPolygon::convex_hull(const std::vector<ConvexPolygon>& convex_polygons) {
+	return ConvexPolygon::Impl::convex_hull(convex_polygons);
 }
 
 ConvexPolygon::ConvexPolygon(const std::vector<Point2>& vertices) : pimpl(new Impl(vertices)) {}
