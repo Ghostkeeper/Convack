@@ -225,7 +225,7 @@ private:
 
 		std::vector<Point2> result;
 		Point2 last = *std::min_element(points.begin(), points.end(), [](const Point2& a, const Point2& b) {
-			return a.x < b.x; //Select vertex most to negative X as starting point for the loop. The leftmost point is always in the convex hull.
+			return a.x < b.x || (a.x == b.x && a.y < b.y); //Select vertex most to negative X as starting point for the loop. The leftmost point is always in the convex hull.
 		});
 
 		do {
