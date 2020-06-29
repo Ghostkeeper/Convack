@@ -304,6 +304,14 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
 }
 
 /*!
+ * Test taking the convex hull of an empty set of convex polygons.
+ */
+TEST(ConvexPolygon, ConvexPolyHullEmpty) {
+	std::vector<ConvexPolygon> empty;
+	EXPECT_EQ(ConvexPolygon::convex_hull(empty), ConvexPolygon({}));
+}
+
+/*!
  * Test computing the area of an empty convex polygon.
  */
 TEST(ConvexPolygon, AreaEmpty) {
