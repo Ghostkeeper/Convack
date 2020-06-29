@@ -308,7 +308,15 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
  */
 TEST(ConvexPolygon, ConvexPolyHullEmpty) {
 	std::vector<ConvexPolygon> empty;
-	EXPECT_EQ(ConvexPolygon::convex_hull(empty), ConvexPolygon({}));
+	EXPECT_EQ(ConvexPolygon::convex_hull(empty), ConvexPolygon({})) << "There was no input data, so the convex hull is empty.";
+}
+
+/*!
+ * Test taking the convex hull around a single convex polygon.
+ */
+TEST_F(ConvexPolygonFixture, ConvexPolyHullSingle) {
+	std::vector<ConvexPolygon> single = {ConvexPolygon(triangle)};
+	EXPECT_EQ(ConvexPolygon::convex_hull(single), ConvexPolygon(triangle)) << "The input data is already convex, so taking the convex hull results in the same polygon.";
 }
 
 /*!
