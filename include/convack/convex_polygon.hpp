@@ -167,15 +167,17 @@ public:
 	 *
 	 * The amount of rotation is in radians (not degrees) and counter-clockwise.
 	 * \param angle_radians The amount of rotation in radians.
+	 * \return A reference to this convex polygon, to allow chaining.
 	 */
-	void rotate(const double angle_radians);
+	ConvexPolygon& rotate(const double angle_radians);
 
 	/*!
 	 * Move this convex polygon in any direction.
 	 * \param x The translation along the X axis.
 	 * \param y The translation along the Y axis.
+	 * \return A reference to this convex polygon, to allow chaining.
 	 */
-	void translate(const coordinate_t x, const coordinate_t y);
+	ConvexPolygon& translate(const coordinate_t x, const coordinate_t y);
 
 private:
 	/*!

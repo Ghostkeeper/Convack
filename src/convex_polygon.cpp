@@ -463,12 +463,14 @@ const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 	return pimpl->get_vertices();
 }
 
-void ConvexPolygon::translate(const coordinate_t x, const coordinate_t y) {
+ConvexPolygon& ConvexPolygon::translate(const coordinate_t x, const coordinate_t y) {
 	pimpl->translate(x, y);
+	return *this;
 }
 
-void ConvexPolygon::rotate(const double angle_radians) {
+ConvexPolygon& ConvexPolygon::rotate(const double angle_radians) {
 	pimpl->rotate(angle_radians);
+	return *this;
 }
 
 }
