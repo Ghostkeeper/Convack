@@ -392,27 +392,62 @@ private:
 				//N.B. This is not the greatest X coordinate, but rather the greatest negative angle!
 				size_t lower_bound = 0;
 				size_t upper_bound = vertices.size();
-				while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
-					const size_t pivot = (upper_bound + lower_bound) / 2;
-					const Point2& pivot_point = vertices[pivot];
-					const area_t pivot_how_left = is_left(last, best, pivot_point);
-					//Find which direction around the pivot goes to the right.
-					const Point2& pivot_upper = vertices[(pivot + 1) % vertices.size()];
-					const area_t pivot_upper_how_left = is_left(last, best, pivot_upper);
-					//If upper is less left (more right), or equally left but farther away, this range is better.
-					if(pivot_upper_how_left < pivot_how_left || (pivot_upper_how_left == pivot_how_left && (pivot_upper - last).magnitude2() > (pivot_point - last).magnitude2())) { //Upper range is better.
-						lower_bound = pivot + 1;
-						continue;
+				if(vertices.size() > 1) { //If there's just 1 vertex, lower_bound is already the right-most vertex.
+					//Test if vertices[0] is already the right-most vertex! The binary search below doesn't take vertices[0] into account.
+					const area_t vertices0_how_left = is_left(last, best, vertices[0]);
+					const area_t vertices1_how_left = is_left(last, best, vertices[1]);
+					const area_t verticesb_how_left = is_left(last, best, vertices.back());
+					if(!((vertices0_how_left < vertices1_how_left || (vertices0_how_left == vertices1_how_left && (vertices[0] - last).magnitude2() > (vertices[1] - last).magnitude2()))
+					  && (vertices0_how_left < verticesb_how_left || (vertices0_how_left == verticesb_how_left && (vertices[0] - last).magnitude2() > (vertices.back() - last).magnitude2())))) {
+						while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
+							const size_t pivot = (upper_bound + lower_bound) / 2;
+							const Point2& pivot_point = vertices[pivot];
+							const area_t pivot_how_left = is_left(last, best, pivot_point);
+							//Find on which side of the pivot the right-most vertex is.
+							//For an intuition, see the diagrams and explanation at http://geomalgorithms.com/a14-_extreme_pts.html
+							const Point2& pivot_next = vertices[(pivot + 1) % vertices.size()];
+							const area_t pivot_next_how_left = is_left(last, best, pivot_next);
+							const bool pivot_goes_right = pivot_next_how_left < pivot_how_left || (pivot_next_how_left == pivot_how_left && (pivot_next - last).magnitude2() > (pivot_point - last).magnitude2());
+							const Point2& pivot_previous = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
+							const area_t pivot_previous_how_left = is_left(last, best, pivot_previous);
+							if(!pivot_goes_right && (pivot_how_left < pivot_previous_how_left || (pivot_how_left == pivot_previous_how_left && (pivot_point - last).magnitude2() > (pivot_previous - last).magnitude2()))) { //This is a local optimum. We're done!
+								lower_bound = pivot;
+								break;
+							}
+
+							const Point2& lower_point = vertices[lower_bound];
+							const area_t lower_how_left = is_left(last, best, lower_point);
+							const Point2& lower_next = vertices[(lower_bound + 1) % vertices.size()];
+							const area_t lower_next_how_left = is_left(last, best, lower_next);
+							const bool lower_goes_right = lower_next_how_left < lower_how_left || (lower_next_how_left == lower_how_left && (lower_next - last).magnitude2() > (lower_point - last).magnitude2());
+
+							if(lower_goes_right) {
+								if(!pivot_goes_right) {
+									//Beyond the lower bound, but not beyond the pivot point, so it must be in the lower range.
+									upper_bound = pivot;
+								} else {
+									//Beyond both the lower bound and the pivot point. That means it's after whichever one is most to the right.
+									if(pivot_how_left < lower_how_left || (pivot_how_left == lower_how_left && (pivot_point - last).magnitude2() > (lower_point - last).magnitude2())) {
+										lower_bound = pivot + 1;
+									} else {
+										upper_bound = pivot;
+									}
+								}
+							} else {
+								if(pivot_goes_right) {
+									//Before the lower bound, but after the pivot point, so it must be in the upper range.
+									lower_bound = pivot + 1;
+								} else {
+									//Before both the lower bound and the pivot point. That means it's beyond whichever one is most to the right.
+									if(pivot_how_left > lower_how_left || (pivot_how_left == lower_how_left && (lower_point - last).magnitude2() > (pivot_point - last).magnitude2())) {
+										lower_bound = pivot + 1;
+									} else {
+										upper_bound = pivot;
+									}
+								}
+							}
+						}
 					}
-					const Point2& pivot_lower = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
-					const area_t pivot_lower_how_left = is_left(last, best, pivot_lower);
-					if(pivot_lower_how_left < pivot_how_left || (pivot_lower_how_left == pivot_how_left && (pivot_lower - last).magnitude2() > (pivot_point - last).magnitude2())) { //Lower range is better.
-						upper_bound = pivot;
-						continue;
-					}
-					//Neither is better. Our pivot is already the rightest!
-					lower_bound = pivot;
-					break;
 				}
 				//We've found the right-most vertex of this convex polygon (index lower_bound). Is it better than the current best?
 				const area_t how_left = is_left(last, best, vertices[lower_bound]);
