@@ -457,9 +457,11 @@ private:
 					best_polygon = polygon;
 				}
 			}
-
 			//The best vertex is now the right-most vertex of all convex hulls!
-			result.push_back(best);
+
+			last = best;
+			last_polygon = best_polygon;
+			last_vertex = best_vertex;
 		} while(best != result[0]); //Continue until we're looping back to the first vertex of the result.
 
 		return ConvexPolygon(result);
