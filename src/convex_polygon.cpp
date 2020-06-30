@@ -313,23 +313,53 @@ private:
 			//Perform a binary search to find the left-most vertex of this convex polygon.
 			size_t lower_bound = 0;
 			size_t upper_bound = vertices.size();
-			while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
-				const size_t pivot = (upper_bound + lower_bound) / 2;
-				//Find which direction around the pivot goes to the left.
-				const Point2& pivot_point = vertices[pivot];
-				const Point2& pivot_upper = vertices[(pivot + 1) % vertices.size()];
-				if(pivot_upper.x < pivot_point.x || (pivot_upper.x == pivot_point.x && pivot_upper.y < pivot_point.y)) { //Upper range is better.
-					lower_bound = pivot + 1;
-					continue;
+			if(vertices.size() > 1 && //If there's just 1 vertex, lower_bound is already the left-most vertex.
+				!((vertices[0].x < vertices[1].x || (vertices[0].x == vertices[1].x && vertices[0].y < vertices[1].y)) //Test if vertex 0 is the left-most vertex! The binary search below doesn't take vertices[0] into account.
+				&& (vertices[0].x < vertices.back().x || (vertices[0].x == vertices.back().x && vertices[0].y < vertices.back().y)))
+			) {
+				while(upper_bound - lower_bound > 1) { //If the bounds are just 1 vertex apart, we've found our answer.
+					const size_t pivot = (upper_bound + lower_bound) / 2;
+					const Point2& pivot_point = vertices[pivot];
+					//Find on which side of the pivot the left-most vertex is.
+					//For an intuition, see the diagrams and explanation at http://geomalgorithms.com/a14-_extreme_pts.html
+					const Point2& pivot_next = vertices[(pivot + 1) % vertices.size()];
+					const bool pivot_goes_left = pivot_next.x < pivot_point.x || (pivot_next.x == pivot_point.x && pivot_next.y < pivot_point.y);
+					const Point2& pivot_previous = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
+					if(!pivot_goes_left && (pivot_point.x < pivot_previous.x || (pivot_point.x == pivot_previous.x && pivot_point.y < pivot_previous.y))) { //This is a local optimum. We're done!
+						lower_bound = pivot;
+						break;
+					}
+
+					const Point2& lower_point = vertices[lower_bound];
+					const Point2& lower_next = vertices[(lower_bound + 1) % vertices.size()];
+					const bool lower_goes_left = lower_next.x < lower_point.x || (lower_next.x == lower_point.x && lower_next.y < lower_point.y);
+
+					if(lower_goes_left) {
+						if(!pivot_goes_left) {
+							//Beyond the lower bound, but not beyond the pivot point, so it must be in the lower range.
+							upper_bound = pivot;
+						} else {
+							//Beyond both the lower bound and the pivot point. That means it's after whichever one is most to the left.
+							if(pivot_point.x < lower_point.x || (pivot_point.x == lower_point.x && pivot_point.y < lower_point.y)) {
+								lower_bound = pivot + 1;
+							} else {
+								upper_bound = pivot;
+							}
+						}
+					} else {
+						if(pivot_goes_left) {
+							//Before the lower bound, but after the pivot point, so it must be in the upper range.
+							lower_bound = pivot + 1;
+						} else {
+							//Before both the lower bound and the pivot point. That means it's beyond whichever one is most to the right.
+							if(pivot_point.x > lower_point.x || (pivot_point.x == lower_point.x && pivot_point.y > lower_point.y)) {
+								lower_bound = pivot + 1;
+							} else {
+								upper_bound = pivot;
+							}
+						}
+					}
 				}
-				const Point2& pivot_lower = vertices[(pivot - 1 + vertices.size()) % vertices.size()];
-				if(pivot_lower.x < pivot_point.x || (pivot_lower.x == pivot_point.x && pivot_lower.y < pivot_point.y)) { //Lower range is better.
-					upper_bound = pivot;
-					continue;
-				}
-				//Neither is better. Our pivot is already the leftest!
-				lower_bound = pivot;
-				break;
 			}
 			if(vertices[lower_bound].x < best.x || (vertices[lower_bound].x == best.x && vertices[lower_bound].y < best.y)) {
 				best = vertices[lower_bound];
