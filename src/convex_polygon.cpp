@@ -383,7 +383,7 @@ private:
 			best_vertex = (last_vertex + 1) % convex_polygons[last_polygon].get_vertices().size();
 			best = convex_polygons[last_polygon].get_vertices()[best_vertex];
 			//Scan through the other convex polygons if we find anything better.
-			for(size_t polygon = (last_polygon + 1) % convex_polygons.size(); polygon < last_polygon; polygon = (polygon + 1) % convex_polygons.size()) {
+			for(size_t polygon = (last_polygon + 1) % convex_polygons.size(); polygon != last_polygon; polygon = (polygon + 1) % convex_polygons.size()) {
 				const std::vector<Point2>& vertices = convex_polygons[polygon].get_vertices();
 				if(vertices.empty()) {
 					continue;
