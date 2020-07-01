@@ -410,6 +410,30 @@ TEST_F(ConvexPolygonFixture, ConvexPolyHullOverlapping) {
 }
 
 /*!
+ * Test taking the convex hull where sometimes multiple vertices line up
+ * exactly.
+ */
+TEST_F(ConvexPolygonFixture, ConvexPolyHullColinear) {
+	const std::vector<ConvexPolygon> colinear {
+		ConvexPolygon(triangle),
+		ConvexPolygon(triangle).translate(10, 5),
+		ConvexPolygon(triangle).translate(20, 10),
+		ConvexPolygon(triangle).translate(-10, -5) //Also in a different order.
+	};
+	const ConvexPolygon ground_truth({
+		Point2(-10, -5), //Lower left corner of the fourth polygon.
+		Point2(40, -5), //Lower right corner of the fourth polygon.
+		//N.B. no extraneous vertices in between!
+		Point2(70, 10), //Lower right corner of the third polygon.
+		Point2(45, 60), //Top corner of the third polygon.
+		//N.B. no extraneous vertices in between!
+		Point2(15, 45) //Top corner of the fourth polygon.
+	});
+
+	EXPECT_EQ(ConvexPolygon::convex_hull(colinear), ground_truth) << "The result should be completely simplified with no extra vertices halfway between two colinear segments.";
+}
+
+/*!
  * Test computing the area of an empty convex polygon.
  */
 TEST(ConvexPolygon, AreaEmpty) {
