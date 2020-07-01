@@ -391,6 +391,25 @@ TEST_F(ConvexPolygonFixture, ConvexPolyHullFourTriangles) {
 }
 
 /*!
+ * Test taking the convex hull of shapes that overlap.
+ */
+TEST_F(ConvexPolygonFixture, ConvexPolyHullOverlapping) {
+	const std::vector<ConvexPolygon> pair {
+		ConvexPolygon(triangle),
+		ConvexPolygon(triangle).translate(25, 25) //Translated such that the left-bottom corner falls smack in the middle of the other convex polygon.
+	};
+	const ConvexPolygon ground_truth({
+		Point2(0, 0), //Lower left corner of the first polygon.
+		Point2(50, 0), //Lower right corner of the first polygon.
+		Point2(75, 25), //Lower right corner of the second polygon.
+		Point2(50, 75), //Top corner of the second polygon.
+		Point2(25, 50) //Top corner of the first polygon.
+	});
+
+	EXPECT_EQ(ConvexPolygon::convex_hull(pair), ground_truth);
+}
+
+/*!
  * Test computing the area of an empty convex polygon.
  */
 TEST(ConvexPolygon, AreaEmpty) {
