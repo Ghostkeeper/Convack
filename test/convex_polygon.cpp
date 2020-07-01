@@ -337,6 +337,12 @@ TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoTriangles) {
 	EXPECT_EQ(ConvexPolygon::convex_hull(two), ground_truth);
 }
 
+/*!
+ * Test taking the convex hull around two circles, offset from each other.
+ *
+ * This essentially tests how it works with more complex shapes, with more than
+ * 3 vertices.
+ */
 TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoCircles) {
 	const std::vector<ConvexPolygon> pair { //Input circles.
 		ConvexPolygon(circle),
@@ -357,6 +363,31 @@ TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoCircles) {
 	const ConvexPolygon ground_truth(truth_vertices);
 
 	EXPECT_EQ(ConvexPolygon::convex_hull(pair), ground_truth);
+}
+
+/*!
+ * Test taking the convex hull around four triangles.
+ *
+ * This tests how it deals with more than 2 shapes.
+ */
+TEST_F(ConvexPolygonFixture, ConvexPolyHullFourTriangles) {
+	const std::vector<ConvexPolygon> four {
+		ConvexPolygon(triangle),
+		ConvexPolygon(triangle).translate(100, -10),
+		ConvexPolygon(triangle).translate(100, 60),
+		ConvexPolygon(triangle).translate(0, 60)
+	};
+	const ConvexPolygon ground_truth({
+		Point2(0, 0), //Lower left corner of the bottom left polygon.
+		Point2(100, -10), //Lower left corner of the bottom right polygon (since it's lower than the bottom right corner of the bottom left polygon).
+		Point2(150, -10), //Lower right corner of the bottom right polygon.
+		Point2(150, 60), //Lower right corner of the top right polygon.
+		Point2(125, 110), //Top corner of the top right polygon.
+		Point2(25, 110), //Top corner of the top left polygon.
+		Point2(0, 60) //Lower left corner of the top left polygon.
+	});
+
+	EXPECT_EQ(ConvexPolygon::convex_hull(four), ground_truth);
 }
 
 /*!
