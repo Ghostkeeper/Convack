@@ -307,7 +307,7 @@ TEST(ConvexPolygon, ConvexHullSinglePoint) {
  * Test taking the convex hull of an empty set of convex polygons.
  */
 TEST(ConvexPolygon, ConvexPolyHullEmpty) {
-	std::vector<ConvexPolygon> empty;
+	const std::vector<ConvexPolygon> empty;
 	EXPECT_EQ(ConvexPolygon::convex_hull(empty), ConvexPolygon({})) << "There was no input data, so the convex hull is empty.";
 }
 
@@ -315,8 +315,26 @@ TEST(ConvexPolygon, ConvexPolyHullEmpty) {
  * Test taking the convex hull around a single convex polygon.
  */
 TEST_F(ConvexPolygonFixture, ConvexPolyHullSingle) {
-	std::vector<ConvexPolygon> single = {ConvexPolygon(triangle)};
+	const std::vector<ConvexPolygon> single = {ConvexPolygon(triangle)};
 	EXPECT_EQ(ConvexPolygon::convex_hull(single), ConvexPolygon(triangle)) << "The input data is already convex, so taking the convex hull results in the same polygon.";
+}
+
+/*!
+ * Test taking the convex hull around two triangles, offset from each other.
+ */
+TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoTriangles) {
+	const std::vector<ConvexPolygon> two {
+		ConvexPolygon(triangle),
+		ConvexPolygon(triangle).translate(100, 10)
+	};
+	const ConvexPolygon ground_truth({
+		Point2(0, 0), //Far left corner of the leftmost polygon.
+		Point2(50, 0), //Lower right corner of the leftmost polygon.
+		Point2(150, 10), //Jumps to the second polygon here. Far right corner of the rightmost polygon.
+		Point2(125, 60), //Tip of the rightmost polygon.
+		Point2(25, 50), //Jumps back to the first polygon. Tip of the leftmost polygon.
+	});
+	EXPECT_EQ(ConvexPolygon::convex_hull(two), ground_truth);
 }
 
 /*!
