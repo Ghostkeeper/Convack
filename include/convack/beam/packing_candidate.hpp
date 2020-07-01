@@ -34,7 +34,7 @@ public:
 	 * objects is fixed for this candidate, so the packed objects or the score
 	 * cannot change during the lifetime of this candidate.
 	 */
-	PackingCandidate(const std::vector<ConvexPolygon*>& packed_objects);
+	PackingCandidate(const std::vector<ConvexPolygon>& packed_objects);
 
 	/*!
 	 * Get the score of this candidate.
@@ -45,7 +45,7 @@ private:
 	/*!
 	 * A list of convex polygons that need to be packed.
 	 */
-	std::vector<ConvexPolygon*> packed_objects;
+	std::vector<ConvexPolygon> packed_objects;
 
 	/*!
 	 * How well this candidate is rated. A lower score is considered a better

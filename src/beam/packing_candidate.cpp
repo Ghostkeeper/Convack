@@ -4,10 +4,11 @@
  */
 
 #include "beam/packing_candidate.hpp" //The definitions we're implementing here.
+#include "convex_polygon.hpp" //To store some convex polygons and perform operations on them.
 
 namespace convack {
 
-PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon*>& packed_objects) : packed_objects(packed_objects) {
+PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon>& packed_objects) : packed_objects(packed_objects) {
 	score = 0; //TODO: Compute score.
 }
 
