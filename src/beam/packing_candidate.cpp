@@ -9,11 +9,28 @@
 namespace convack {
 
 PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon>& packed_objects) : packed_objects(packed_objects) {
-	score = 0; //TODO: Compute score.
+	score = compute_score();
 }
 
 double PackingCandidate::get_score() const {
 	return score;
+}
+
+double PackingCandidate::compute_score() const {
+	//Score is the ratio of area that is "lost" when packing objects this way.
+	//The "lost" area is the part that is in the convex hull around all objects, but not covered by an object itself.
+
+	area_t covered_area = 0; //Original area.
+	for(const ConvexPolygon& convex_polygon : packed_objects) {
+		covered_area = convex_polygon.area();
+	}
+
+	area_t lost_area = ConvexPolygon::convex_hull(packed_objects).area(); //Will ALWAYS be bigger or equally big as the covered area.
+	if(lost_area <= 0) {
+		return 0; //Prevent division by 0.
+	}
+
+	return 1.0 - (covered_area / lost_area);
 }
 
 }

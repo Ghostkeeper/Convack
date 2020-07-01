@@ -55,6 +55,11 @@ private:
 	 * packing.
 	 */
 	double score;
+
+	/*!
+	 * Compute the score for this candidate.
+	 */
+	double compute_score() const;
 };
 
 }
