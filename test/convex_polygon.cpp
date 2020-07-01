@@ -337,6 +337,28 @@ TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoTriangles) {
 	EXPECT_EQ(ConvexPolygon::convex_hull(two), ground_truth);
 }
 
+TEST_F(ConvexPolygonFixture, ConvexPolyHullTwoCircles) {
+	const std::vector<ConvexPolygon> pair { //Input circles.
+		ConvexPolygon(circle),
+		ConvexPolygon(circle).translate(100, 0)
+	};
+
+	std::vector<Point2> truth_vertices; //Construct the ground truth.
+	truth_vertices.reserve(circle.size() + 2);
+	for(size_t i = 0; i <= circle.size() / 4; ++i) { //Take the first quarter circle. This is part of the right-hand side of the convex hull. This is correct iff circle.size() is divisible by 4.
+		truth_vertices.emplace_back(circle[i].x + 100, circle[i].y);
+	}
+	for(size_t i = circle.size() / 4; i <= circle.size() * 3 / 4; ++i) { //The next half is on the left-hand side.
+		truth_vertices.push_back(circle[i]);
+	}
+	for(size_t i = circle.size() * 3 / 4; i < circle.size(); ++i) { //And the last quarter is on the right-hand side again.
+		truth_vertices.emplace_back(circle[i].x + 100, circle[i].y);
+	}
+	const ConvexPolygon ground_truth(truth_vertices);
+
+	EXPECT_EQ(ConvexPolygon::convex_hull(pair), ground_truth);
+}
+
 /*!
  * Test computing the area of an empty convex polygon.
  */
