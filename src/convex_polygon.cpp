@@ -300,6 +300,10 @@ private:
 			return convex_polygons[0];
 		}
 
+		//As a guess of the size of the output size, we'll use the largest of the polygons.
+		//Not used as "K" parameter here. Just to reserve enough vertices in the output vector!
+		size_t largest_polygon_size = 4; //Don't reserve for fewer than 4 vertices anyway.
+
 		//First find the left-most vertex among all convex polygons.
 		//This vertex is always in the convex hull.
 		Point2 best(std::numeric_limits<coordinate_t>::max(), 0);
@@ -310,6 +314,7 @@ private:
 			if(vertices.empty()) {
 				continue;
 			}
+			largest_polygon_size = std::max(largest_polygon_size, vertices.size());
 			//Perform a binary search to find the left-most vertex of this convex polygon.
 			size_t lower_bound = 0;
 			size_t upper_bound = vertices.size();
@@ -371,6 +376,7 @@ private:
 			return ConvexPolygon({});
 		}
 		std::vector<Point2> result;
+		result.reserve(largest_polygon_size);
 
 		//Now iteratively find the next point on the resulting polygon by choosing the right-most convex hull.
 		Point2 last = best;
