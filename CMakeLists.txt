@@ -16,6 +16,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 #Where to find the source code.
 set(convack_sources
+	beam/beam_search.cpp
 	beam/packing_candidate.cpp
 	convex_polygon.cpp
 	point2.cpp
