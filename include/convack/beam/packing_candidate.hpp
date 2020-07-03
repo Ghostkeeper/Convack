@@ -8,9 +8,9 @@
 
 #include <vector> //To store the convex polygons being packed so far.
 
-namespace convack {
+#include "convex_polygon.hpp"
 
-class ConvexPolygon;
+namespace convack {
 
 /*!
  * This is a data structure that represents an intermediary state of convex
@@ -33,8 +33,17 @@ public:
 	 * The candidate will compute its score immediately. The list of packed
 	 * objects is fixed for this candidate, so the packed objects or the score
 	 * cannot change during the lifetime of this candidate.
+	 * \param packed_objects All of the objects that need to get packed. This
+	 * includes objects that have already been packed before it reaches this
+	 * candidate.
+	 * \param pack_here The polygon that is new in the packing for this
+	 * candidate. Should be one of the convex polygons from the
+	 * \ref packed_objects vector.
+	 * \param parent The candidate that this candidate is derived from, if any.
+	 * You can see this as the parent node in the search tree. It contains a
+	 * packing that does not contain the pack_here polygon yet.
 	 */
-	PackingCandidate(const std::vector<ConvexPolygon>& packed_objects);
+	PackingCandidate(const std::vector<ConvexPolygon>& packed_objects, const ConvexPolygon& pack_here, const PackingCandidate* const parent);
 
 	/*!
 	 * Get the score of this candidate.
@@ -43,9 +52,28 @@ public:
 
 private:
 	/*!
-	 * A list of convex polygons that need to be packed.
+	 * A list of all convex polygons that need to be packed.
+	 *
+	 * This includes objects that have already been packed in parent candidates,
+	 * the object packed in this candidate as well as objects that have not yet
+	 * been packed.
 	 */
-	std::vector<ConvexPolygon> packed_objects;
+	const std::vector<ConvexPolygon>& packed_objects;
+
+	/*!
+	 * This candidate builds upon its parent candidates by adding one new convex
+	 * polygon to its packing. The new convex polygon is stored in this node,
+	 * while the previously packed objects are stored in the parent nodes.
+	 */
+	ConvexPolygon pack_here;
+
+	/*!
+	 * A reference to the parent candidate upon which this candidate extends the
+	 * search.
+	 *
+	 * If there is no parent candidate, this will be a `nullptr`.
+	 */
+	const PackingCandidate* const parent;
 
 	/*!
 	 * How well this candidate is rated. A lower score is considered a better
