@@ -50,6 +50,10 @@ public:
 	 *
 	 * The order of these convex polygons will not be modified. You can use this
 	 * order to identify which convex polygon was which.
+	 * \param convex_polygons A list of convex polygons that need to be packed.
+	 * This list only needs to exist during the execution of the packing
+	 * algorithm. The packed convex polygons don't stay in the scene. The result
+	 * will be stored in this same list.
 	 */
 	void pack(std::vector<ConvexPolygon>& convex_polygons) const;
 
