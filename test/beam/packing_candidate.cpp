@@ -53,4 +53,18 @@ TEST_F(PackingCandidateFixture, ComputeScoreSingle) {
 	EXPECT_EQ(candidate.get_score(), 0) << "Since there is only one object to pack, the packing is perfect.";
 }
 
+/*!
+ * Test computing the score of a packing candidate that packs two objects.
+ */
+TEST_F(PackingCandidateFixture, ComputeScoreDouble) {
+	const std::vector<ConvexPolygon> packed_objects({
+		triangle,
+		triangle.translate(50, 0)
+	});
+	PackingCandidate parent(packed_objects, packed_objects[0], nullptr);
+	PackingCandidate child(packed_objects, packed_objects[1], &parent);
+
+	EXPECT_FLOAT_EQ(child.get_score(), 1.0 / 3.0) << "One triangle was shifted by exactly its baseline. That creates a void of exactly the same area as the triangle itself. The hull then contains two triangles and one void with the same size, so one third is waste.";
+}
+
 }
