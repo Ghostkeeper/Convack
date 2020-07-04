@@ -69,3 +69,6 @@ if(BUILD_TESTS)
 		gtest_discover_tests(${test_case} PROPERTIES DEPENDS BuildTests)
 	endforeach()
 endif()
+
+#Examples
+add_subdirectory(examples)
