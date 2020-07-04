@@ -72,6 +72,14 @@ public:
 	~ConvexPolygon();
 
 	/*!
+	 * Assigns a convex polygon into this one, copying its data.
+	 * \param original The convex polygon to copy into this one.
+	 * \return A reference to this convex polygon. This way, the assignment can
+	 * be used in a more complex expression.
+	 */
+	ConvexPolygon& operator =(const ConvexPolygon& original);
+
+	/*!
 	 * Compares two convex polygons for whether they cover the same area.
 	 *
 	 * Both convex polygons are assumed to be convex and minimal (as in, they

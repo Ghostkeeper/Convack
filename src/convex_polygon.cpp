@@ -509,6 +509,11 @@ ConvexPolygon::ConvexPolygon(const ConvexPolygon& original) : pimpl(new Impl(*or
 
 ConvexPolygon::~ConvexPolygon() = default; //Defined here where there is a complete type for Impl, so that the unique_ptr can be deleted.
 
+ConvexPolygon& ConvexPolygon::operator =(const ConvexPolygon& original) {
+	pimpl = std::unique_ptr<Impl>(new Impl(original.pimpl->get_vertices()));
+	return *this;
+}
+
 bool ConvexPolygon::operator ==(const ConvexPolygon& other) const {
 	return *pimpl == other;
 }
