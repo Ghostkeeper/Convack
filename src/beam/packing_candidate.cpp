@@ -33,15 +33,15 @@ double PackingCandidate::compute_score() const {
 
 	area_t covered_area = 0; //Original area.
 	for(const ConvexPolygon& convex_polygon : packed_so_far) {
-		covered_area = convex_polygon.area();
+		covered_area += convex_polygon.area();
 	}
 
-	area_t lost_area = ConvexPolygon::convex_hull(packed_so_far).area(); //Will ALWAYS be bigger or equally big as the covered area.
-	if(lost_area <= 0) {
+	area_t used_area = ConvexPolygon::convex_hull(packed_so_far).area(); //Will ALWAYS be bigger or equally big as the covered area.
+	if(used_area <= 0) {
 		return 0; //Prevent division by 0.
 	}
 
-	return 1.0 - (covered_area / lost_area);
+	return 1.0 - (covered_area / used_area);
 }
 
 }
