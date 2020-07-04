@@ -2,7 +2,7 @@
  * Library to pack convex polygons into arbitrary shapes.
  * Any copyright is dedicated to the public domain. See LICENSE.md for more details.
  */
-
+#include <iostream> //DEBUG!
 #include "beam/packing_candidate.hpp" //The definitions we're implementing here.
 #include "convex_polygon.hpp" //To store some convex polygons and perform operations on them.
 
@@ -32,11 +32,11 @@ double PackingCandidate::compute_score() const {
 	}
 
 	area_t covered_area = 0; //Original area.
-	for(const ConvexPolygon& convex_polygon : packed_objects) {
+	for(const ConvexPolygon& convex_polygon : packed_so_far) {
 		covered_area = convex_polygon.area();
 	}
 
-	area_t lost_area = ConvexPolygon::convex_hull(packed_objects).area(); //Will ALWAYS be bigger or equally big as the covered area.
+	area_t lost_area = ConvexPolygon::convex_hull(packed_so_far).area(); //Will ALWAYS be bigger or equally big as the covered area.
 	if(lost_area <= 0) {
 		return 0; //Prevent division by 0.
 	}
