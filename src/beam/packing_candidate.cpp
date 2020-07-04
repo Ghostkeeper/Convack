@@ -23,6 +23,14 @@ double PackingCandidate::compute_score() const {
 	//Score is the ratio of area that is "lost" when packing objects this way.
 	//The "lost" area is the part that is in the convex hull around all objects, but not covered by an object itself.
 
+	//Serialise to a vector, because we need to provide a vector for the ConvexPolygon::convex_hull() call below.
+	std::vector<ConvexPolygon> packed_so_far;
+	const PackingCandidate* candidate = this;
+	while(candidate) {
+		packed_so_far.push_back(candidate->pack_here); //TODO: Makes an unnecessary copy!
+		candidate = candidate->parent;
+	}
+
 	area_t covered_area = 0; //Original area.
 	for(const ConvexPolygon& convex_polygon : packed_objects) {
 		covered_area = convex_polygon.area();
