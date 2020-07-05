@@ -62,6 +62,26 @@ public:
 	 */
 	void pack(std::vector<ConvexPolygon>& convex_polygons) const;
 
+	/*!
+	 * Change the beam width of the beam search.
+	 *
+	 * With a greater beam width, the beam search algorithm will consider more
+	 * sub-optimal packing options during intermediate stages of the search
+	 * process. This way, the beam search can find packings that are more
+	 * optimal in the end, but require an intermediary result that is less
+	 * optimal. In effect it will find a global optimum more easily rather than
+	 * getting stuck in a local optimum.
+	 *
+	 * A greater beam width will also cause the algorithm to take more
+	 * processing power.
+	 *
+	 * The beam width must be at least 1. A beam width of 1 will turn this into
+	 * a completely greedy search, adding the best object at each stage but not
+	 * exploring any suboptimal choices.
+	 * \param new_width The new beam width setting.
+	 */
+	void set_beam_width(const size_t new_beam_width);
+
 private:
 	/*!
 	 * The implementation of the scene is separated into this class.
