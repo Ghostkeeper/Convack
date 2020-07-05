@@ -14,6 +14,7 @@ scene and get the results. This example involves the following steps:
 #include <cmath> //To calculate the positions of the vertices for the regular polygons.
 #include <convack/convex_polygon.hpp> //The convex polygons we're going to pack.
 #include <convack/point2.hpp> //To generate convex polygons.
+#include <convack/scene.hpp> //To bootstrap the packing action.
 #include <vector> //To create a list of regular polygons.
 
 /*!
@@ -34,5 +35,10 @@ std::vector<convack::ConvexPolygon> create_regular_polygons() {
 }
 
 int main(int argc, char** argv) {
-    std::vector<convack::ConvexPolygon> regular_polygons = create_regular_polygons();
+    std::vector<convack::ConvexPolygon> regular_polygons = create_regular_polygons(); //The polygons we want to pack.
+
+	//Convack works by preparing a scene where you're going to pack the convex polygons in.
+	//You can then change the packing settings, add obstacles to the scene, etc.
+	//In this case we don't need to do all that and just want to pack a bunch of polygons together.
+	convack::Scene().pack(regular_polygons); //Perform the actual packing.
 }
