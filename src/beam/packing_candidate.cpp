@@ -8,7 +8,7 @@
 
 namespace convack {
 
-PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon>& packed_objects, const ConvexPolygon& pack_here, const PackingCandidate* const parent) :
+PackingCandidate::PackingCandidate(const std::vector<ConvexPolygon>* packed_objects, const ConvexPolygon& pack_here, PackingCandidate* parent) :
 		packed_objects(packed_objects),
 		pack_here(pack_here),
 		parent(parent) {

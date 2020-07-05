@@ -43,10 +43,13 @@ public:
 	 * You can see this as the parent node in the search tree. It contains a
 	 * packing that does not contain the pack_here polygon yet.
 	 */
-	PackingCandidate(const std::vector<ConvexPolygon>& packed_objects, const ConvexPolygon& pack_here, const PackingCandidate* const parent);
+	PackingCandidate(const std::vector<ConvexPolygon>* packed_objects, const ConvexPolygon& pack_here, PackingCandidate* parent);
 
 	/*!
 	 * Get the score of this candidate.
+	 *
+	 * This indicates how well this candidate was packed.
+	 * \return The assigned score to this candidate.
 	 */
 	double get_score() const;
 
@@ -58,7 +61,7 @@ private:
 	 * the object packed in this candidate as well as objects that have not yet
 	 * been packed.
 	 */
-	const std::vector<ConvexPolygon>& packed_objects;
+	const std::vector<ConvexPolygon>* packed_objects;
 
 	/*!
 	 * This candidate builds upon its parent candidates by adding one new convex
@@ -73,7 +76,7 @@ private:
 	 *
 	 * If there is no parent candidate, this will be a `nullptr`.
 	 */
-	const PackingCandidate* const parent;
+	PackingCandidate* parent;
 
 	/*!
 	 * How well this candidate is rated. A lower score is considered a better
