@@ -40,6 +40,11 @@ public:
 	Scene();
 
 	/*!
+	 * Deletes the scene.
+	 */
+	~Scene();
+
+	/*!
 	 * Create a packing of a given list of convex polygons.
 	 *
 	 * The convex polygons will be modified in-place to fit in the scene. To

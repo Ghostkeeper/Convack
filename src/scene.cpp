@@ -38,6 +38,8 @@ private:
 
 Scene::Scene() : pimpl(new Impl(*this)) {}
 
+Scene::~Scene() = default;
+
 void Scene::pack(std::vector<ConvexPolygon>& convex_polygons) const {
 	pimpl->pack(convex_polygons);
 }
