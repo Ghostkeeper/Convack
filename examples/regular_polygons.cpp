@@ -15,6 +15,7 @@ scene and get the results. This example involves the following steps:
 #include <convack/convex_polygon.hpp> //The convex polygons we're going to pack.
 #include <convack/point2.hpp> //To generate convex polygons.
 #include <convack/scene.hpp> //To bootstrap the packing action.
+#include <fstream> //To write the result to a file.
 #include <iostream> //To show progress and errors.
 #include <vector> //To create a list of regular polygons.
 
@@ -37,6 +38,36 @@ std::vector<convack::ConvexPolygon> create_regular_polygons() {
 	return result;
 }
 
+/*!
+ * Write the result to an SVG file so that you can visualise it.
+ * \param file_name The name of the file to generate. Include the extension.
+ * \param polygons The polygons to write to that file.
+ */
+void to_svg(const std::string& file_name, const std::vector<convack::ConvexPolygon>& polygons) {
+	std::ofstream svg(file_name);
+	if(!svg.is_open()) {
+		std::cout << "Failed to write to file: " << file_name << std::endl;
+		return;
+	}
+
+	svg << "<?xml version=\"1.0\" ?>\n";
+	svg << "<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+	svg << "\t<g stroke=\"black\" stroke-width=\"1\" fill=\"none\">\n";
+
+	for(const convack::ConvexPolygon& polygon : polygons) {
+		svg << "\t\t<polygon points=\"";
+		for(const convack::Point2& vertex : polygon.get_vertices()) {
+			svg << vertex.x << "," << vertex.y << " ";
+		}
+		svg << "\" />\n";
+	}
+
+	svg << "\t</g>\n";
+	svg << "</svg>";
+
+	svg.close();
+}
+
 int main(int argc, char** argv) {
 	std::cout << "Generating regular polygons..." << std::endl;
 	std::vector<convack::ConvexPolygon> regular_polygons = create_regular_polygons(); //The polygons we want to pack.
@@ -46,6 +77,10 @@ int main(int argc, char** argv) {
 	//In this case we don't need to do all that and just want to pack a bunch of polygons together.
 	std::cout << "Packing..." << std::endl;
 	convack::Scene().pack(regular_polygons); //Perform the actual packing.
+
+	//Write the result to a file so that you can visualise it.
+	std::cout << "Writing result to SVG file..." << std::endl;
+	to_svg("regular_polygons.svg", regular_polygons);
 
 	std::cout << "Done!" << std::endl;
 }
