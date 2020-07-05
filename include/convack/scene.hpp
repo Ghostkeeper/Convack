@@ -45,6 +45,14 @@ public:
 	~Scene();
 
 	/*!
+	 * Gets the current value for the beam width setting.
+	 *
+	 * See \ref set_beam_width for an explanation of what this setting controls.
+	 * \return The current value for the beam width setting.
+	 */
+	size_t get_beam_width() const;
+
+	/*!
 	 * Create a packing of a given list of convex polygons.
 	 *
 	 * The convex polygons will be modified in-place to fit in the scene. To
