@@ -30,12 +30,13 @@ std::vector<convack::ConvexPolygon> create_regular_polygons() {
 			double angle = 2.0 * pi / num_sides * i;
 			vertices.emplace_back(std::cos(angle) * radius, std::sin(angle) * radius);
 		}
+		result.emplace_back(vertices);
 	}
 	return result;
 }
 
 int main(int argc, char** argv) {
-    std::vector<convack::ConvexPolygon> regular_polygons = create_regular_polygons(); //The polygons we want to pack.
+	std::vector<convack::ConvexPolygon> regular_polygons = create_regular_polygons(); //The polygons we want to pack.
 
 	//Convack works by preparing a scene where you're going to pack the convex polygons in.
 	//You can then change the packing settings, add obstacles to the scene, etc.
