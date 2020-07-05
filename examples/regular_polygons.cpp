@@ -51,7 +51,7 @@ void to_svg(const std::string& file_name, const std::vector<convack::ConvexPolyg
 	}
 
 	svg << "<?xml version=\"1.0\" ?>\n";
-	svg << "<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+	svg << "<svg width=\"100\" height=\"100\" viewBox=\"-50 -50 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n";
 	svg << "\t<g stroke=\"black\" stroke-width=\"1\" fill=\"none\">\n";
 
 	for(const convack::ConvexPolygon& polygon : polygons) {
