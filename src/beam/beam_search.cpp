@@ -17,7 +17,11 @@ void BeamSearch::pack(const Scene& scene, std::vector<ConvexPolygon>& convex_pol
 	//Priority queue with the N best options to consider so far.
 	std::priority_queue<PackingCandidate, std::vector<PackingCandidate>, LowestScore> best_orders;
 
-	PackingCandidate root(convex_polygons, convex_polygons[0], nullptr);
+	//Generate the roots of the beam search tree. We'll start by placing all objects initially in the priority queue.
+	//This is a starting point for what we want to search from.
+	for(ConvexPolygon& convex_polygon : convex_polygons) {
+		best_orders.emplace(&convex_polygons, convex_polygon, nullptr);
+	}
 }
 
 bool BeamSearch::LowestScore::operator ()(const PackingCandidate& a, const PackingCandidate& b) {
