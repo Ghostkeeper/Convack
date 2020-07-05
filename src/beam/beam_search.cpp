@@ -11,6 +11,9 @@
 namespace convack {
 
 void BeamSearch::pack(const Scene& scene, std::vector<ConvexPolygon>& convex_polygons) {
+	if(convex_polygons.empty()) {
+		return; //Nothing to pack.
+	}
 	//Priority queue with the N best options to consider so far.
 	std::priority_queue<PackingCandidate, std::vector<PackingCandidate>, LowestScore> best_orders;
 
