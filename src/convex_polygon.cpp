@@ -14,11 +14,6 @@ namespace convack {
 class ConvexPolygon::Impl {
 public:
 	/*!
-	 * The coordinates of the convex polygon.
-	 */
-	std::vector<Point2> vertices;
-
-	/*!
 	 * The transformation applied so far since the construction of the convex
 	 * polygon.
 	 *
@@ -28,6 +23,19 @@ public:
 	 * convex polygons have been transformed to pack them.
 	 */
 	Transformation transformation;
+
+	/*!
+	 * A unique identifier for this convex polygon.
+	 *
+	 * The identifier is generated when the polygon is created from vertices. It
+	 * is preserved when the polygon is transformed or copied.
+	 */
+	uint64_t uuid;
+
+	/*!
+	 * The coordinates of the convex polygon.
+	 */
+	std::vector<Point2> vertices;
 
 	/*! @copydoc ConvexPolygon::convex_hull(const std::vector<Point2>&)
 	 */
@@ -43,7 +51,9 @@ public:
 
 	/*! @copydoc ConvexPolygon::ConvexPolygon(const std::vector<Point2>&)
 	 */
-	Impl(const std::vector<Point2>& vertices) : vertices(vertices) {} //Copy the input vertices into this class.
+	Impl(const std::vector<Point2>& vertices) : vertices(vertices) {
+		uuid = next_uid++;
+	}
 
 	/*! @copydoc ConvexPolygon::operator ==(const ConvexPolygon&) const
 	 */
@@ -193,19 +203,6 @@ public:
 		return vertices;
 	}
 
-	/*! @copydoc ConvexPolygon::translate(const coordinate_t, const coordinate_t)
-	 */
-	void translate(const coordinate_t x, const coordinate_t y) {
-		/* This actually applies the transformation to the vertices. We assume
-		here that the vertices are requested more often than the transformation
-		changed. Applying the transformation once is then more efficient. */
-		const Transformation translation = Transformation().translate(x, y);
-		for(Point2& vertex : vertices) {
-			vertex = translation.apply(vertex);
-		}
-		transformation.translate(x, y); //Also track the transformation so far.
-	}
-
 	/*! @copydoc ConvexPolygon::rotate(const double)
 	 */
 	void rotate(const double angle_radians) {
@@ -219,7 +216,31 @@ public:
 		transformation.rotate(angle_radians); //Also track the transformation so far.
 	}
 
+	/*! @copydoc ConvexPolygon::translate(const coordinate_t, const coordinate_t)
+	 */
+	void translate(const coordinate_t x, const coordinate_t y) {
+		/* This actually applies the transformation to the vertices. We assume
+		here that the vertices are requested more often than the transformation
+		changed. Applying the transformation once is then more efficient. */
+		const Transformation translation = Transformation().translate(x, y);
+		for(Point2& vertex : vertices) {
+			vertex = translation.apply(vertex);
+		}
+		transformation.translate(x, y); //Also track the transformation so far.
+	}
+
+	uint64_t uid() const {
+		return uuid;
+	}
+
 private:
+	/*!
+	 * Incrementing counter that increments every time we create a new convex
+	 * polygon. This way, at least within the lifetime of one thread, each
+	 * convex polygon gets a unique identifier assigned.
+	 */
+	static uint64_t next_uid;
+
 	/*!
 	 * Executes the gift wrapping algorithm on a set of points to create a
 	 * convex hull around them.
@@ -493,6 +514,8 @@ private:
 	}
 };
 
+size_t ConvexPolygon::Impl::next_uid = 0;
+
 //Implementations of the parent ConvexPolygon class all refers on to the PIMPL class.
 
 ConvexPolygon ConvexPolygon::convex_hull(const std::vector<Point2>& points) {
@@ -546,14 +569,18 @@ const std::vector<Point2>& ConvexPolygon::get_vertices() const {
 	return pimpl->get_vertices();
 }
 
+ConvexPolygon& ConvexPolygon::rotate(const double angle_radians) {
+	pimpl->rotate(angle_radians);
+	return *this;
+}
+
 ConvexPolygon& ConvexPolygon::translate(const coordinate_t x, const coordinate_t y) {
 	pimpl->translate(x, y);
 	return *this;
 }
 
-ConvexPolygon& ConvexPolygon::rotate(const double angle_radians) {
-	pimpl->rotate(angle_radians);
-	return *this;
+size_t ConvexPolygon::uid() const {
+	return pimpl->uid();
 }
 
 }

@@ -187,6 +187,15 @@ public:
 	 */
 	ConvexPolygon& translate(const coordinate_t x, const coordinate_t y);
 
+	/*!
+	 * Get a unique identifier for this convex polygon.
+	 *
+	 * The identifier is generated when creating a convex polygon. It is not
+	 * modified when transforming the convex polygon and retained when the
+	 * convex polygon is copied.
+	 */
+	uint64_t uid() const;
+
 private:
 	/*!
 	 * The implementation of the convex polygon is separated into this class.
