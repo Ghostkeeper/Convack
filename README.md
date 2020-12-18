@@ -1,6 +1,8 @@
 Convack is intended to become a library to perform polygon packing with convex polygons.
 
-Like most projects, Convack is not fit for release at the moment of this writing. I'm deliberately not writing that it's "under construction", since there are no guarantees that it's still being worked on by the time you're reading this. It's intended as a project of about a month, so if you're reading this three years hence, give up the hope that it'll get finished.
+This library was once developed as an option to try and see how difficult this problem is in practice. The idea was that it might replace the arrange algorithm in [Cura](https://github.com/Ultimaker/Cura) at some point. However with Cura we've chosen a different library instead, as indeed the problem can become quite complex.
+
+Ever since the need for this library is removed by Cura, I've not developed it any further. It served its use as a basic set-up for geometry algorithms and a nice convex hull implementation. But beyond that there is hardly anything useful in this repository.
 
 Objective
 ----
@@ -11,7 +13,7 @@ The origin of this project is the need for printed object packing in [Cura](http
 * Needs to be able to pack polygons with un-movable barriers in the scene.
 * Needs to be able to be published in an LGPL-licensed project.
 
-No other project that we found met all of these requirements.
+At the time of writing, no other project has met all of these demands. However recently [libnest2d](https://github.com/tamasmeszaros/libnest2d) changed their license and then meets all of those requirements.
 
 Implementation
 ----
